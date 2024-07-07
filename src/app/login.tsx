@@ -59,8 +59,8 @@ export default function Login() {
             <FontAwesomeIcon icon= {faApple}  className={style.icon}/>
             </button>
             <div className={style.parent}>
-            <div className={style.final}>Have an account?</div>
-            <div className={style.final2}><button>Sign in</button></div>
+            <div className={style.final}>Don't have an account?</div>
+            <div className={style.final2}><button>Sign up</button></div>
             </div>
           
             </div>
