@@ -1,11 +1,11 @@
 "use client"
 import * as React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowHeightParams } from '@mui/x-data-grid';
 import style from "./style/category.module.css";
 import { Alert,Box, colors, Tab, Tabs } from '@mui/material';
 import { Avatar } from '@mui/material'; 
 const columns: GridColDef[] = [
-  { field: 'image', headerName: 'Product', width: 120, renderCell: (params) => <Avatar alt={params.row.Name} src={params.value} className={style.image}/> },
+  { field: 'image', headerName: 'Product', width: 120, sortable:false, renderCell: (params) => <Avatar alt={params.row.Name} src={params.value} className={style.image}/> },
   { field: 'Name', headerName: 'Name', width: 500 },
   { field: 'Description', headerName: 'Description', sortable:false,width: 550 },
   { field: 'status', headerName: 'Status', width: 200,renderCell: ({ value }) => {
@@ -18,7 +18,7 @@ const columns: GridColDef[] = [
         statusColor = 'red';
         break;
       default:
-        statusColor = 'black'; 
+        statusColor = 'grey'; 
     }
     return <span style={{ color: statusColor }}>{value}</span>;
   },
@@ -39,15 +39,6 @@ export default function DataTable() {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-  const getRowHeight = (params) => {
-      // Adjust the logic here based on your needs
-      // You can access the row data using params.row
-    if (params.row.image.heig> 50) { // Example: Increase height for rows with long descriptions
-      return 80; // Set a desired height (in pixels)
-    } else {
-      return 60; // Default height (in pixels)
-    }
-    };
   };
   return (
     <div className={style.all}>
@@ -73,13 +64,18 @@ export default function DataTable() {
           columns={columns}
           initialState={{
             pagination: {
-              paginationModel: { page: 0, pageSize: 6},
+              paginationModel: { page: 0, pageSize: 5 },
             },
+          }}
+          //pageSizeOptions={[5, 10]}
+          getRowHeight={({ id, densityFactor }: GridRowHeightParams) => {
+  
+            return 70 * densityFactor;
           }}
           checkboxSelection
         />
       </div>
-        <Alert severity="info" className={style.alert}>Learn more about category</Alert>
+        <Alert severity="info" className={style.alert}><a href="url" className={style.word}>Learn more about category</a></Alert>
       </div>
     </div>
   );

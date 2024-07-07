@@ -1,5 +1,5 @@
 .all{
-    margin-top: 6%;
+    margin-top: 4%;
 }
 .table{
     height: 600;
@@ -49,4 +49,8 @@
     width: 80px;
     border-radius: 10%;
     height: 50px;
+    margin-top: 10px ;
+}
+.word{
+    color:rgb(9, 108, 236);
 }
