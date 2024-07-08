@@ -1,13 +1,7 @@
 .all{
     margin-top: 4%;
 }
-.table{
-    height: 600;
-    width: '100%';
-    margin-left: 20px;
-    margin-right: 20px;
-}
-.button{
+.createCategory{
     margin-left:77%;
     color:aliceblue;
     background-color: black;
@@ -18,9 +12,6 @@
     width:150px;
     margin-top: 30px;
 }
-.text{
-    float:left;
-}
 .head{
     display:flex;
 }
@@ -28,15 +19,16 @@
     display:flex;
     flex-direction: column;
 }
-.button:hover{
+.createCategory:hover{
     background-color: rgb(84, 84, 84);
+    cursor: pointer;
 }
 .alert{
     margin-top: 20px;
     margin-left:20px;
     margin-right:20px;
 }
-.box{
+.tableTab{
     margin-left:20px;
     margin-right:20px;
 }
