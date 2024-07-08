@@ -1,0 +1,45 @@
+.label {
+  text-align: left;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.email {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  margin-bottom: 8px;
+}
+.remember {
+  display: flex;
+  align-items: center;
+}
+
+.remember button {
+  height: 20px;
+}
+.forgot {
+  display: flex;
+  align-items: center;
+}
+
+.forgot button {
+  border: none;
+  outline: none;
+  background: white;
+}
+.align {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px auto;
+  text-align: center;
+}
