@@ -1,3 +1,176 @@
-.text{
-    color:aqua
+.column {
+    float: left;
+    width: 50%;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .block{
+    display: absolute;
+    align-items: center;
+    justify-content: center;
+    margin: 120px auto;
+    text-align: center;
+  }
+
+
+  .email {
+
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .label {
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .container{
+    display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  margin-bottom: 8px;
+  }
+
+
+  
+
+  
+
+ /* cho nay */
+
+.align{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px auto;
+    text-align: center;
+
+
 }
+.forgot{
+  display: flex;
+  align-items: center;
+}
+
+
+.forgot button{
+    border: none;
+    outline: none;
+    background: white;
+
+   
+
+}
+.remember{
+  display: flex;
+  align-items: center;
+  
+}
+
+.remember button{
+  height: 20px;
+
+
+}
+
+
+.wrapper button.actual{
+  color: rgb(254, 241, 241); 
+  font-family: sans-serif;
+  width: 325px;
+  height: 40px;
+  font-size: 18px;
+  text-align: center;
+  justify-content: center;
+  background: rgb(30, 28, 28);
+  margin-bottom: 10px;
+  align-items: center;
+  border-radius: 5px;
+  transform: translateX(12px);
+}
+
+.wrapper div.or{
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin-top: 30px ;
+  color: #808080;
+
+}
+
+.wrapper button.social1{
+  color: #C71610FF;
+  background: #FEF1F1FF;
+  height: 38px;
+  width: 65px; 
+  padding: 10px 15px;
+  margin: 5px 5px;
+  border-radius: 10px; 
+  border: none;
+  outline: none;
+}
+
+.wrapper button.social2{
+  color: #335CA6FF;
+  background: #F3F6FBFF;  
+  height: 38px;
+  width: 65px; 
+  padding: 10px 15px;
+  margin: 5px 5px;
+  border-radius: 10px; 
+  border: none;
+  outline: none;
+}
+
+.wrapper button.social3{
+  
+  height: 38px;
+  width: 65px; 
+  padding: 10px 15px;
+  margin: 5px 5px;
+  border-radius: 10px; 
+  border: none;
+  outline: none;
+}
+
+.icon{
+  height: 20px;
+}
+.wrapper div.parent{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+.wrapper div.final{
+    color: #808080;
+    
+  }
+
+.wrapper div.final2 button{
+    outline: none;
+    border: none;
+    background: white;
+    font-weight: bolder;
+    font-size: 17px;
+}
+
+  
+
+
+
+
+
+
