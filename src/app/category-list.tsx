@@ -2,8 +2,9 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, GridRowHeightParams } from '@mui/x-data-grid';
 import style from "./style/category.module.css";
-import { Alert,Box, colors, Tab, Tabs } from '@mui/material';
+import { Alert,Box, colors, IconButton, Tab, TableRow, Tabs } from '@mui/material';
 import { Avatar } from '@mui/material'; 
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 const columns: GridColDef[] = [
   { field: 'image', headerName: 'Product', width: 120, sortable:false, renderCell: (params) => <Avatar alt={params.row.Name} src={params.value} className={style.image}/> },
   { field: 'Name', headerName: 'Name', width: 500 },
@@ -23,7 +24,19 @@ const columns: GridColDef[] = [
     return <span style={{ color: statusColor }}>{value}</span>;
   },
 },
+{
+  field: 'action',
+  headerName: '',
+  width: 1,
+  sortable: false,
+  renderCell: (params) => (
+    <IconButton aria-label="move">
+      <MoreVertIcon /> 
+    </IconButton>
+  )
+}
 ];
+
 const rows = [
   { id: 1, image: "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain", Name: 'Coffee', Description: "Very Hot Drinks", status: "Active" },
   {id: 2, image: "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain", Name: 'Coffee', Description:"Very Hot Drinks", status:"Active" },
