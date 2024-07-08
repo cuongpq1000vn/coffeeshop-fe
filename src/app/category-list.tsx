@@ -9,7 +9,7 @@ const columns: GridColDef[] = [
   { field: 'image', headerName: 'Product', width: 120, sortable:false, renderCell: (params) => <Avatar alt={params.row.Name} src={params.value} className={style.image}/> },
   { field: 'Name', headerName: 'Name', width: 500 },
   { field: 'Description', headerName: 'Description', sortable:false,width: 550 },
-  { field: 'status', headerName: 'Status', width: 200,renderCell: ({ value }) => {
+  { field: 'status', headerName: 'Status', width: 190,renderCell: ({ value }) => {
     let statusColor;
     switch (value) {
       case 'Active':
@@ -27,7 +27,7 @@ const columns: GridColDef[] = [
 {
   field: 'action',
   headerName: '',
-  width: 1,
+  width: 0.5 ,
   sortable: false,
   renderCell: (params) => (
     <IconButton aria-label="move">
