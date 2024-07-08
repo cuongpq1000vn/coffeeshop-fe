@@ -86,7 +86,7 @@ export default function Login() {
             height={0}
             sizes="100vw"
             style={{ width: "100%", height: "auto" }}
-            alt="" // optional
+            alt=""
           />
         </div>
       </div>
