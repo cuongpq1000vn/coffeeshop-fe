@@ -1,6 +1,7 @@
-import { CategoryList, Login } from "../components/organisms";
-
 export default function Page() {
-  // return <Login></Login>
-  return <CategoryList></CategoryList>;
+  return (
+    <div>
+      <h1>Dashboard</h1>
+    </div>
+  );
 }
