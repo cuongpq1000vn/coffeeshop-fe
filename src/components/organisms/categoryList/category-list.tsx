@@ -7,6 +7,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Table } from "@/components/molecules";
 import { CategoryProps } from "@/types/CategoryTable";
 import { TableProps } from "@/types/Table";
+
 const columnsTable: GridColDef[] = [
   {
     field: "image",
