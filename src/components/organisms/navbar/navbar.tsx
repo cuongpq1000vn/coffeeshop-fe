@@ -17,14 +17,23 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import SearchIcon from "@mui/icons-material/Search";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import Badge from "@mui/material/Badge";
-import LaptopIcon from '@mui/icons-material/Laptop';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
+import LaptopIcon from "@mui/icons-material/Laptop";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
-import WidgetsIcon from '@mui/icons-material/WidgetsOutlined';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-function ResponsiveAppBar() {
+import WidgetsIcon from "@mui/icons-material/WidgetsOutlined";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
+import Fade from "@mui/material/Fade";
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function ResponsiveAppBar() {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -115,11 +124,7 @@ function ResponsiveAppBar() {
               }}
             >
               <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">
-                  {" "}
-                  Dashboard{" "}
-                </Typography>
-      
+                <Typography textAlign="center"> Dashboard </Typography>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center"> Menu Config </Typography>
@@ -162,23 +167,52 @@ function ResponsiveAppBar() {
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
-            ><WidgetsIcon className={style.iconbar}/> Dashboard</Button>
-            
+            >
+              <WidgetsIcon className={style.iconbar} /> Dashboard
+            </Button>
+            <div>
+              <Button
+                id="fade-button"
+                aria-controls={open ? "fade-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={handleClick}
+                className={style.pagec}
+              >
+                <LocalMallOutlinedIcon className={style.iconbar} /> Menu Config{" "}
+                <KeyboardArrowDownIcon className={style.iconbar} />
+              </Button>
+              <Menu
+                id="fade-menu"
+                MenuListProps={{
+                  "aria-labelledby": "fade-button",
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                TransitionComponent={Fade}
+              >
+                <MenuItem onClick={handleClose}> <CategoryOutlinedIcon className={style.iconbar}/>  Category</MenuItem>
+                <MenuItem onClick={handleClose}> <LocalMallOutlinedIcon className={style.iconbar}/> Product</MenuItem>
+                <MenuItem onClick={handleClose}><TuneOutlinedIcon className={style.iconbar}/> Product Add-Ons</MenuItem>
+              </Menu>
+            </div>
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
-            ><LocalMallOutlinedIcon className={style.iconbar}/> Menu Config <KeyboardArrowDownIcon className={style.iconbar}/></Button>
+            >
+              <LaptopIcon className={style.iconbar} /> Order Manager{" "}
+              <KeyboardArrowDownIcon className={style.iconbar} />
+            </Button>
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
-            ><LaptopIcon className={style.iconbar}/> Order Manager <KeyboardArrowDownIcon className={style.iconbar}/></Button>
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block" }}
-              className={style.pagec}
-            ><BarChartIcon className={style.iconbar}/> Sales Analytics</Button>
+            >
+              <BarChartIcon className={style.iconbar} /> Sales Analytics
+            </Button>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <IconButton size="large" aria-label="search" color="inherit">
