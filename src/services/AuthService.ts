@@ -28,7 +28,6 @@ export async function login(data: LoginOwnerDTO): Promise<TokenDTO> {
     const result = (await response.json()) as TokenDTO;
     return result;
   } catch (err) {
-    console.log(err);
     throw NextResponse.json({ response: { status: 500 } });
   }
 }

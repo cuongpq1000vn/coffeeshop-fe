@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 export async function POST(request: Request) {
   const res = await request.json();
-  const sessionToken = res.payload?.data?.token;
+  const sessionToken = res.token;
   if (!sessionToken) {
     return Response.json(
       { message: "Error token" },
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     {
       status: 200,
       headers: {
-        "Set-Cookie": `sessionToken=${sessionToken}; Path=/`,
+        "Set-Cookie": `sessionToken=${sessionToken}; Path=/; HttpOnly`,
       },
     }
   );

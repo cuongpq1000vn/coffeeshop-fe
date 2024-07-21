@@ -12,6 +12,7 @@ import {
 import { useForm } from "react-hook-form";
 import Toast from "@/util/notification";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@/context/AppProvider";
 export default function LoginForm() {
   const {
     register,
@@ -19,11 +20,23 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm();
   const router = useRouter();
-  async function onSubmit(data: LoginOwnerDTO) {
+  const { setSessionToken } = useAppContext();
+  const onSubmit = async (data: LoginOwnerDTO) => {
     try {
       const result: TokenDTO = await login(data);
-      
-      router.push("/");
+      const getCookie = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(result),
+      });
+      if(!getCookie.ok){
+        console.log(`HTTP error! status: ${getCookie.status}`);
+      }
+      const payload = (await getCookie.json()) as TokenDTO;
+      setSessionToken(payload.token);
+      router.push("/content/category");
       router.refresh();
     } catch (error: any) {
       if (!error?.response) {
@@ -36,7 +49,7 @@ export default function LoginForm() {
         Toast.notifyError("Login Failed");
       }
     }
-  }
+  };
 
   return (
     <div>
