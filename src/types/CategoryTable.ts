@@ -5,5 +5,6 @@ export type CategoryProps = {
     image: string,
     Name: string,
     Description: string,
-    status: string
+    status: string,
+    
 }
