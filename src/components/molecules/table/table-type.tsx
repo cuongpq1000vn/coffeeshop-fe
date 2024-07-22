@@ -9,7 +9,7 @@ export default function Table(tableProps: TableProps) {
         columns={tableProps.columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: tableProps.pageNumber, pageSize: tableProps.pageSize },
           },
         }}
         getRowHeight={({ id, densityFactor }: GridRowHeightParams) => {

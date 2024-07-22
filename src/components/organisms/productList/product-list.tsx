@@ -2,18 +2,19 @@
 import * as React from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import style from "../style/product.module.css";
-import { Alert, Box, IconButton, Tab, Tabs, Avatar } from "@mui/material";
+import { Alert, IconButton, Avatar } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Table } from "@/components/molecules";
-import { ProductProps } from "@/types/ProductTable";
+import { Table, TableTab } from "@/components/molecules";
 import { TableProps } from "@/types/Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faArrowUpFromBracket, 
-  faArrowDown,
-} from '@fortawesome/free-solid-svg-icons';
-
-
+import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { useAppContext } from "@/context/AppProvider";
+import { PageDTO } from "@/types/Page";
+import { ProductDTO } from "@/types/dtos/categoryProduct/Product";
+import { getAllProduct } from "@/services/ProductService";
+import { TableTabProps } from "@/types/TableTab";
+import { convertToCSV, downloadCSV } from "@/util/convertCsv";
 
 const columnsTable: GridColDef[] = [
   {
@@ -80,131 +81,77 @@ const columnsTable: GridColDef[] = [
   },
 ];
 
-const category: ProductProps[] = [
-  {
-    id: 1,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Active",
-    Price: "10.000 VND",
-    Category: "Hot Drinks"
-
-
-
-  },
-  {
-    id: 2,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Active",
-    Price: "10.000 VND",
-    Category: "Hot Drinks"
-
-  },
-  {
-    id: 3,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Inactive",
-    Price: "10.000 VND",
-    Category: "Hot Drinks"
-  },
-  {
-    id: 4,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Inactive",
-    Price: "10.000 VND",
-    Category: "Hot Drinks"
-  },
-  {
-    id: 5,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Draft",
-    Price: "10.000 VND",
-    Category: "Hot Drinks"
-  },
-  {
-    id: 6,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Active",
-    Price: "10.000 VND",
-    Category: "Hot Drinks"
-  },
-  {
-    id: 7,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Active",
-    Price: "10.000 VND",
-    Category: "Hot Drinks"
-  },
-];
-const categoryProps: TableProps = {
-  columns: columnsTable,
-  rows: category,
-};
 export default function DataTable() {
-  const [value, setValue] = React.useState(0);
+  const { sessionToken } = useAppContext();
+  const [products, setProducts] = useState<PageDTO<ProductDTO> | null>(null);
+  const [productProps, setProductProps] = useState<TableProps | null>(null);
+  const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+  const fetchData = async () => {
+    const result: PageDTO<ProductDTO> = await getAllProduct(sessionToken);
+    setProducts(result);
+    const category: TableProps = {
+      columns: columnsTable,
+      rows: result.content.map((product) => ({
+        id: product.id,
+        image: product.imgs[0] || "",
+        Name: product.name,
+        Description: product.shortDescription,
+        status: product.live ? "Active" : "Inactive",
+        Price: product.price,
+        Category: product.category ? "Hot Coffee" : "Ice Coffee",
+      })),
+      pageSize: result.pageable.pageSize,
+      pageNumber: result.pageable.pageNumber,
+      totalElements: result.totalElements,
+      totalPages: result.totalPages,
+    };
+    setProductProps(category);
+    const tableTab: TableTabProps = {
+      total: result.content.length,
+      active: result.content.filter((product) => product.live).length,
+      inActive: result.content.filter((product) => !product.live).length,
+    };
+    setTableTab(tableTab);
   };
+
+  const exportData = () => {
+    if (!products) return;
+    const csvData = products.content.map((product) => ({
+      id: product.id,
+      image: product.imgs[0] || "",
+      Name: product.name,
+      Description: product.shortDescription,
+      status: product.live ? "Active" : "Inactive",
+      Price: product.price,
+      Category: product.category ? "Hot Coffee" : "Ice Coffee",
+    }));
+    const csv = convertToCSV(csvData);
+    downloadCSV(csv, "products.csv");
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [sessionToken]);
+
   return (
     <div className={style.all}>
       <div className={style.head}>
+        <div className={style.column}></div>
         <div className={style.column}>
-          <button className={style.export}>Menu Config</button>
-          <button className={style.export}> / </button>
-          <button className={style.export}>Product</button>
-          <h1>Product</h1>
-        </div>
-        <div className={style.imex}>
-        <button className={style.export}>
-        <FontAwesomeIcon icon={faArrowUpFromBracket} className={style.icons} />
-          Export</button>
-        <button className={style.import}>
-        <FontAwesomeIcon icon={faArrowDown}  className={style.icons}/>
-        Import</button>
-        </div>
-
-        <div className={style.column}>
+          <button className={style.export} onClick={exportData}>
+            <FontAwesomeIcon
+              icon={faArrowUpFromBracket}
+              className={style.icons}
+            />
+            Export
+          </button>
           <button className={style.createCategory}>+ Create Product</button>
         </div>
-       
       </div>
       <div className={style.bottom}>
-        <div className={style.tableTab}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-            >
-              <Tab label="All Categories (20)" />
-              <Tab label="Active (10)" />
-              <Tab label="Draft (5)" />
-              <Tab label="Inactive (5)" />
-            </Tabs>
-          </Box>
-        </div>
-        <Table {...categoryProps} />
+        {tableTab && <TableTab {...tableTab} />}
+        {productProps && <Table {...productProps} />}
         <Alert severity="info" className={style.alert}>
           <a href="url" className={style.word}>
             Learn more about category

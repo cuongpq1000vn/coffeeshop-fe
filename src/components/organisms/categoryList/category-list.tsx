@@ -2,15 +2,16 @@
 import * as React from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import style from "../style/category.module.css";
-import { Alert, Box, IconButton, Tab, Tabs, Avatar } from "@mui/material";
+import { Alert, IconButton, Avatar } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Table } from "@/components/molecules";
-import { CategoryProps } from "@/types/CategoryTable";
+import { Table, TableTab } from "@/components/molecules";
 import { TableProps } from "@/types/Table";
 import { getAllCategory } from "@/services/CategoryService";
 import { useAppContext } from "@/context/AppProvider";
 import { useEffect, useState } from "react";
-import { CategoryDTO } from "@/types/dtos/response/Category";
+import { CategoryDTO } from "@/types/dtos/categoryProduct/Category";
+import { TableTabProps } from "@/types/TableTab";
+
 const columnsTable: GridColDef[] = [
   {
     field: "image",
@@ -63,35 +64,55 @@ const columnsTable: GridColDef[] = [
     ),
   },
 ];
-export default function DataTable() {
-  const {sessionToken} = useAppContext();
-  const [categories, setCategories] = useState<CategoryDTO[]>([]);
-  const [value, setValue] = useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+export default function DataTable() {
+  const { sessionToken } = useAppContext();
+  const [categoryProps, setCategoryProps] = useState<TableProps | null>(null);
+  const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
+
   const fetchData = async () => {
-    const result: CategoryDTO[] = await getAllCategory(sessionToken);
-    setCategories(result);
+    try {
+      const result: CategoryDTO[] = await getAllCategory(sessionToken);
+
+      // Check if result is an array
+      if (!Array.isArray(result)) {
+        console.error("Unexpected data format:", result);
+        return;
+      }
+
+      const tableTab: TableTabProps = {
+        total: result.length,
+        active: result.filter((category) => !category.isDeleted).length,
+        inActive: result.filter((category) => category.isDeleted).length,
+      };
+
+      setTableTab(tableTab);
+
+      const categoryValue: TableProps = {
+        columns: columnsTable,
+        rows: result.map((category) => ({
+          id: category.id,
+          Name: category.name,
+          Description: category.normalizedName,
+          status: category.isDeleted ? "Inactive" : "Active",
+          image: category.images[0] || "",
+          action: "",
+        })),
+        pageSize: 5,
+        pageNumber: 0,
+        totalElements: result.length,
+        totalPages: Math.ceil(result.length / 5), // Adjust totalPages based on the number of items per page
+      };
+
+      setCategoryProps(categoryValue);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, [sessionToken]);
-
-  const categoryProps: TableProps = {
-    columns: columnsTable,
-    rows: categories.map(category => ({
-      id: category.id,
-      Name: category.name,
-      Description: category.normalizedName,
-      status: category.isDeleted ? 'Inactive' : 'Active',
-      image: category.images[0] || '', 
-      action: ''
-    })),
-  };
-
 
   return (
     <div className={style.all}>
@@ -105,21 +126,8 @@ export default function DataTable() {
         </div>
       </div>
       <div className={style.bottom}>
-        <div className={style.tableTab}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-            >
-              <Tab label={`All Categories (${categories.length})`} />
-              <Tab label="Active (10)" />
-              <Tab label="Draft (5)" />
-              <Tab label="Inactive (5)" />
-            </Tabs>
-          </Box>
-        </div>
-        <Table {...categoryProps} />
+        {tableTab && <TableTab {...tableTab} />}
+        {categoryProps && <Table {...categoryProps} />}
         <Alert severity="info" className={style.alert}>
           <a href="url" className={style.word}>
             Learn more about category
