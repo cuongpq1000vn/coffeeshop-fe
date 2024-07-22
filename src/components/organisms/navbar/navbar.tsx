@@ -20,12 +20,14 @@ import Badge from "@mui/material/Badge";
 import LaptopIcon from "@mui/icons-material/Laptop";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 import WidgetsIcon from "@mui/icons-material/WidgetsOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
 import Fade from "@mui/material/Fade";
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function ResponsiveAppBar() {
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+
+function ResponsiveAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -57,7 +59,7 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function
   };
 
   return (
-    <AppBar position="static" color="primary">
+    <AppBar position="fixed" color="primary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -193,7 +195,7 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function
                 onClose={handleClose}
                 TransitionComponent={Fade}
               >
-                <MenuItem onClick={handleClose}> <CategoryOutlinedIcon className={style.iconbar}/>  Category</MenuItem>
+                <MenuItem onClick={handleClose}> <CategoryOutlinedIcon className={style.iconbar}/>  Category</MenuItem>
                 <MenuItem onClick={handleClose}> <LocalMallOutlinedIcon className={style.iconbar}/> Product</MenuItem>
                 <MenuItem onClick={handleClose}><TuneOutlinedIcon className={style.iconbar}/> Product Add-Ons</MenuItem>
               </Menu>
@@ -263,4 +265,5 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;
