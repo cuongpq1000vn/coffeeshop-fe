@@ -19,5 +19,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [...privatePath, ...authPath],
+  matcher: ["/content/product", "/content/category", "/login"],
 };

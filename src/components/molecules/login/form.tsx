@@ -1,8 +1,8 @@
 "use client";
 import style from "../style/form.module.css";
 import { login } from "@/services/AuthService";
-import { TokenDTO } from "@/types/dtos/response/Token";
-import { LoginOwnerDTO } from "@/types/dtos/request/LoginOwner";
+import { TokenDTO } from "@/types/dtos/auth/Token";
+import { LoginOwnerDTO } from "@/types/dtos/auth/request/LoginOwner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faApple,
@@ -31,7 +31,7 @@ export default function LoginForm() {
         },
         body: JSON.stringify(result),
       });
-      if(!getCookie.ok){
+      if (!getCookie.ok) {
         console.log(`HTTP error! status: ${getCookie.status}`);
       }
       const payload = (await getCookie.json()) as TokenDTO;

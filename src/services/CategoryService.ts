@@ -1,6 +1,6 @@
 "use server";
 
-import { CategoryDTO } from "@/types/dtos/response/Category";
+import { CategoryDTO } from "@/types/dtos/categoryProduct/Category";
 import { NextResponse } from "next/server";
 const COFFEE_SHOP_URL = process.env.COFFEE_SHOP_URL;
 const CONTEXT_PATH = process.env.CONTEXT_PATH_COFFEE_SHOP_CATEGORY_PRODUCT_API;
