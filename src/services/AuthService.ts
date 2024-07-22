@@ -2,6 +2,7 @@
 
 import { LoginOwnerDTO } from "@/types/dtos/request/LoginOwner";
 import { TokenDTO } from "@/types/dtos/response/Token";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 const COFFEE_SHOP_URL = process.env.COFFEE_SHOP_URL;
@@ -30,4 +31,8 @@ export async function login(data: LoginOwnerDTO): Promise<TokenDTO> {
   } catch (err) {
     throw NextResponse.json({ response: { status: 500 } });
   }
+}
+
+export async function logout() {
+  cookies().delete("sessionToken");
 }

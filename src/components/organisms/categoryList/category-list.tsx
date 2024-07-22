@@ -112,7 +112,7 @@ export default function DataTable() {
               onChange={handleChange}
               aria-label="basic tabs example"
             >
-              <Tab label="All Categories (20)" />
+              <Tab label={`All Categories (${categories.length})`} />
               <Tab label="Active (10)" />
               <Tab label="Draft (5)" />
               <Tab label="Inactive (5)" />

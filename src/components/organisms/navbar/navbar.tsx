@@ -20,14 +20,17 @@ import Badge from "@mui/material/Badge";
 import LaptopIcon from "@mui/icons-material/Laptop";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 import WidgetsIcon from "@mui/icons-material/WidgetsOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import Fade from "@mui/material/Fade";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import Link from "next/link";
+import { logout } from "@/services/AuthService";
+import router from "next/router";
+import { useRouter } from "next/navigation";
 function ResponsiveAppBar() {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -57,7 +60,11 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
+  const logoutSubmit = async () => {
+    const result = await logout();
+    console.log(result);
+    router.refresh();
+  }
   return (
     <AppBar position="static" color="primary">
       <Container maxWidth="xl">
@@ -205,7 +212,10 @@ function ResponsiveAppBar() {
                     <LocalMallOutlinedIcon /> Product
                   </MenuItem>
                 </Link>
-                <Link href="/content/product-addon" className={style.iconNavBar}>
+                <Link
+                  href="/content/product-addon"
+                  className={style.iconNavBar}
+                >
                   <MenuItem onClick={handleClose}>
                     <TuneOutlinedIcon /> Product Add-Ons
                   </MenuItem>
@@ -265,11 +275,15 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">Account</Typography>
+              </MenuItem>
+              <MenuItem onClick={logoutSubmit}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
