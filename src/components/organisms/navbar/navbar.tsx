@@ -23,9 +23,11 @@ import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 import WidgetsIcon from "@mui/icons-material/WidgetsOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
+import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import Fade from "@mui/material/Fade";
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function ResponsiveAppBar() {
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
+import Link from "next/link";
+function ResponsiveAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -168,7 +170,7 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
             >
-              <WidgetsIcon className={style.iconbar} /> Dashboard
+              <WidgetsIcon className={style.iconBar} /> Dashboard
             </Button>
             <div>
               <Button
@@ -180,8 +182,8 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function
                 onClick={handleClick}
                 className={style.pagec}
               >
-                <LocalMallOutlinedIcon className={style.iconbar} /> Menu Config{" "}
-                <KeyboardArrowDownIcon className={style.iconbar} />
+                <LocalMallOutlinedIcon className={style.iconBar} /> Menu Config{" "}
+                <KeyboardArrowDownIcon className={style.iconBar} />
               </Button>
               <Menu
                 id="fade-menu"
@@ -193,9 +195,21 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function
                 onClose={handleClose}
                 TransitionComponent={Fade}
               >
-                <MenuItem onClick={handleClose}> <CategoryOutlinedIcon className={style.iconbar}/>  Category</MenuItem>
-                <MenuItem onClick={handleClose}> <LocalMallOutlinedIcon className={style.iconbar}/> Product</MenuItem>
-                <MenuItem onClick={handleClose}><TuneOutlinedIcon className={style.iconbar}/> Product Add-Ons</MenuItem>
+                <Link href="/content/category" className={style.iconNavBar}>
+                  <MenuItem onClick={handleClose}>
+                    <CategoryOutlinedIcon /> Category
+                  </MenuItem>
+                </Link>
+                <Link href="/content/product" className={style.iconNavBar}>
+                  <MenuItem onClick={handleClose}>
+                    <LocalMallOutlinedIcon /> Product
+                  </MenuItem>
+                </Link>
+                <Link href="/content/product-addon" className={style.iconNavBar}>
+                  <MenuItem onClick={handleClose}>
+                    <TuneOutlinedIcon /> Product Add-Ons
+                  </MenuItem>
+                </Link>
               </Menu>
             </div>
             <Button
@@ -203,15 +217,15 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';function
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
             >
-              <LaptopIcon className={style.iconbar} /> Order Manager{" "}
-              <KeyboardArrowDownIcon className={style.iconbar} />
+              <LaptopIcon className={style.iconBar} /> Order Manager{" "}
+              <KeyboardArrowDownIcon className={style.iconBar} />
             </Button>
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
             >
-              <BarChartIcon className={style.iconbar} /> Sales Analytics
+              <BarChartIcon className={style.iconBar} /> Sales Analytics
             </Button>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
