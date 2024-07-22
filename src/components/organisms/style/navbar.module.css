@@ -14,6 +14,13 @@
 .icon {
     color: #f2f2f2;
 }
-.iconbar{
+.iconBar{
+    vertical-align: middle; /* Ensures icon is vertically centered */
+}
+
+
+.iconNavBar{
+    text-decoration: none;
+    color: black;
     vertical-align: middle; /* Ensures icon is vertically centered */
 }

@@ -7,7 +7,10 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Table } from "@/components/molecules";
 import { CategoryProps } from "@/types/CategoryTable";
 import { TableProps } from "@/types/Table";
-
+import { getAllCategory } from "@/services/CategoryService";
+import { useAppContext } from "@/context/AppProvider";
+import { useEffect, useState } from "react";
+import { CategoryDTO } from "@/types/dtos/response/Category";
 const columnsTable: GridColDef[] = [
   {
     field: "image",
@@ -60,75 +63,36 @@ const columnsTable: GridColDef[] = [
     ),
   },
 ];
-
-const category: CategoryProps[] = [
-  {
-    id: 1,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Active",
-  },
-  {
-    id: 2,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Active",
-  },
-  {
-    id: 3,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Inactive",
-  },
-  {
-    id: 4,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Inactive",
-  },
-  {
-    id: 5,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Draft",
-  },
-  {
-    id: 6,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Active",
-  },
-  {
-    id: 7,
-    image:
-      "https://th.bing.com/th/id/OIP.iztlpqBdMWRs23FizYdZmAHaE7?rs=1&pid=ImgDetMain",
-    Name: "Coffee",
-    Description: "Very Hot Drinks",
-    status: "Active",
-  },
-];
-const categoryProps: TableProps = {
-  columns: columnsTable,
-  rows: category,
-};
 export default function DataTable() {
-  const [value, setValue] = React.useState(0);
+  const {sessionToken} = useAppContext();
+  const [categories, setCategories] = useState<CategoryDTO[]>([]);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+  const fetchData = async () => {
+    const result: CategoryDTO[] = await getAllCategory(sessionToken);
+    setCategories(result);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [sessionToken]);
+
+  const categoryProps: TableProps = {
+    columns: columnsTable,
+    rows: categories.map(category => ({
+      id: category.id,
+      Name: category.name,
+      Description: category.normalizedName,
+      status: category.isDeleted ? 'Inactive' : 'Active',
+      image: category.images[0] || '', 
+      action: ''
+    })),
+  };
+
+
   return (
     <div className={style.all}>
       <div className={style.head}>
@@ -148,7 +112,7 @@ export default function DataTable() {
               onChange={handleChange}
               aria-label="basic tabs example"
             >
-              <Tab label="All Categories (20)" />
+              <Tab label={`All Categories (${categories.length})`} />
               <Tab label="Active (10)" />
               <Tab label="Draft (5)" />
               <Tab label="Inactive (5)" />

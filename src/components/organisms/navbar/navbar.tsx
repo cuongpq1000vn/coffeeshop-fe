@@ -22,12 +22,15 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import WidgetsIcon from "@mui/icons-material/WidgetsOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
+import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import Fade from "@mui/material/Fade";
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
-
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
+import Link from "next/link";
+import { logout } from "@/services/AuthService";
+import router from "next/router";
+import { useRouter } from "next/navigation";
 function ResponsiveAppBar() {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -57,7 +60,11 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
+  const logoutSubmit = async () => {
+    const result = await logout();
+    console.log(result);
+    router.refresh();
+  }
   return (
     <AppBar position="fixed" color="primary">
       <Container maxWidth="xl">
@@ -170,7 +177,7 @@ function ResponsiveAppBar() {
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
             >
-              <WidgetsIcon className={style.iconbar} /> Dashboard
+              <WidgetsIcon className={style.iconBar} /> Dashboard
             </Button>
             <div>
               <Button
@@ -182,8 +189,8 @@ function ResponsiveAppBar() {
                 onClick={handleClick}
                 className={style.pagec}
               >
-                <LocalMallOutlinedIcon className={style.iconbar} /> Menu Config{" "}
-                <KeyboardArrowDownIcon className={style.iconbar} />
+                <LocalMallOutlinedIcon className={style.iconBar} /> Menu Config{" "}
+                <KeyboardArrowDownIcon className={style.iconBar} />
               </Button>
               <Menu
                 id="fade-menu"
@@ -195,9 +202,24 @@ function ResponsiveAppBar() {
                 onClose={handleClose}
                 TransitionComponent={Fade}
               >
-                <MenuItem onClick={handleClose}> <CategoryOutlinedIcon className={style.iconbar}/>  Category</MenuItem>
-                <MenuItem onClick={handleClose}> <LocalMallOutlinedIcon className={style.iconbar}/> Product</MenuItem>
-                <MenuItem onClick={handleClose}><TuneOutlinedIcon className={style.iconbar}/> Product Add-Ons</MenuItem>
+                <Link href="/content/category" className={style.iconNavBar}>
+                  <MenuItem onClick={handleClose}>
+                    <CategoryOutlinedIcon /> Category
+                  </MenuItem>
+                </Link>
+                <Link href="/content/product" className={style.iconNavBar}>
+                  <MenuItem onClick={handleClose}>
+                    <LocalMallOutlinedIcon /> Product
+                  </MenuItem>
+                </Link>
+                <Link
+                  href="/content/product-addon"
+                  className={style.iconNavBar}
+                >
+                  <MenuItem onClick={handleClose}>
+                    <TuneOutlinedIcon /> Product Add-Ons
+                  </MenuItem>
+                </Link>
               </Menu>
             </div>
             <Button
@@ -205,15 +227,15 @@ function ResponsiveAppBar() {
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
             >
-              <LaptopIcon className={style.iconbar} /> Order Manager{" "}
-              <KeyboardArrowDownIcon className={style.iconbar} />
+              <LaptopIcon className={style.iconBar} /> Order Manager{" "}
+              <KeyboardArrowDownIcon className={style.iconBar} />
             </Button>
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
             >
-              <BarChartIcon className={style.iconbar} /> Sales Analytics
+              <BarChartIcon className={style.iconBar} /> Sales Analytics
             </Button>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
@@ -253,11 +275,15 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">Account</Typography>
+              </MenuItem>
+              <MenuItem onClick={logoutSubmit}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
