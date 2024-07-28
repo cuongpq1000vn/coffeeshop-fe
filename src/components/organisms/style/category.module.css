@@ -1,0 +1,45 @@
+.all {
+  margin-top: 4%;
+}
+.createCategory {
+  margin-left: 77%;
+  color: aliceblue;
+  background-color: black;
+  border-radius: 6px;
+  border: none;
+  font-size: 12px;
+  padding: 10px 20px;
+  width: 150px;
+  margin-top: 30px;
+}
+.head {
+  display: flex;
+  margin-top: 10%;
+}
+.bottom {
+  display: flex;
+  flex-direction: column;
+}
+.createCategory:hover {
+  background-color: rgb(84, 84, 84);
+  cursor: pointer;
+}
+.alert {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.column {
+  flex: 40%;
+  margin-left: 20px;
+}
+.image {
+  width: 80px;
+  border-radius: 10%;
+  height: 50px;
+  margin-top: 10px;
+}
+.word {
+  color: rgb(9, 108, 236);
+}

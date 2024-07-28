@@ -1,0 +1,163 @@
+"use client";
+import * as React from "react";
+import { GridColDef } from "@mui/x-data-grid";
+import style from "../style/product.module.css";
+import { Alert, IconButton, Avatar } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Table, TableTab } from "@/components/molecules";
+import { TableProps } from "@/types/Table";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { useAppContext } from "@/context/AppProvider";
+import { PageDTO } from "@/types/Page";
+import { ProductDTO } from "@/types/dtos/categoryProduct/Product";
+import { getAllProduct } from "@/services/ProductService";
+import { TableTabProps } from "@/types/TableTab";
+import { convertToCSV, downloadCSV } from "@/util/convertCsv";
+
+const columnsTable: GridColDef[] = [
+  {
+    field: "image",
+    headerName: "Product",
+    width: 120,
+    sortable: false,
+    renderCell: (params) => (
+      <Avatar
+        alt={params.row.Name}
+        src={params.value}
+        className={style.image}
+      />
+    ),
+  },
+  { field: "Name", headerName: "Name", width: 300 },
+  {
+    field: "Category",
+    headerName: "Category",
+    sortable: false,
+    width: 300,
+  },
+  {
+    field: "Description",
+    headerName: "Description",
+    sortable: false,
+    width: 300,
+  },
+  {
+    field: "Price",
+    headerName: "Price",
+    sortable: false,
+    width: 300,
+  },
+  {
+    field: "status",
+    headerName: "Status",
+    width: 190,
+    renderCell: ({ value }) => {
+      let statusColor;
+      switch (value) {
+        case "Active":
+          statusColor = "green";
+          break;
+        case "Inactive":
+          statusColor = "red";
+          break;
+        default:
+          statusColor = "grey";
+      }
+      return <span style={{ color: statusColor }}>{value}</span>;
+    },
+  },
+  {
+    field: "action",
+    headerName: "",
+    width: 0.5,
+    sortable: false,
+    renderCell: (params) => (
+      <IconButton aria-label="move">
+        <MoreVertIcon />
+      </IconButton>
+    ),
+  },
+];
+
+export default function DataTable() {
+  const { sessionToken } = useAppContext();
+  const [products, setProducts] = useState<PageDTO<ProductDTO> | null>(null);
+  const [productProps, setProductProps] = useState<TableProps | null>(null);
+  const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
+
+  const fetchData = async () => {
+    const result: PageDTO<ProductDTO> = await getAllProduct(sessionToken);
+    setProducts(result);
+    const category: TableProps = {
+      columns: columnsTable,
+      rows: result.content.map((product) => ({
+        id: product.id,
+        image: product.imgs[0] || "",
+        Name: product.name,
+        Description: product.shortDescription,
+        status: product.live ? "Active" : "Inactive",
+        Price: product.price,
+        Category: product.category ? "Hot Coffee" : "Ice Coffee",
+      })),
+      pageSize: result.pageable.pageSize,
+      pageNumber: result.pageable.pageNumber,
+      totalElements: result.totalElements,
+      totalPages: result.totalPages,
+    };
+    setProductProps(category);
+    const tableTab: TableTabProps = {
+      total: result.content.length,
+      active: result.content.filter((product) => product.live).length,
+      inActive: result.content.filter((product) => !product.live).length,
+    };
+    setTableTab(tableTab);
+  };
+
+  const exportData = () => {
+    if (!products) return;
+    const csvData = products.content.map((product) => ({
+      id: product.id,
+      image: product.imgs[0] || "",
+      Name: product.name,
+      Description: product.shortDescription,
+      status: product.live ? "Active" : "Inactive",
+      Price: product.price,
+      Category: product.category ? "Hot Coffee" : "Ice Coffee",
+    }));
+    const csv = convertToCSV(csvData);
+    downloadCSV(csv, "products.csv");
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [sessionToken]);
+
+  return (
+    <div className={style.all}>
+      <div className={style.head}>
+        <div className={style.column}></div>
+        <div className={style.column}>
+          <button className={style.export} onClick={exportData}>
+            <FontAwesomeIcon
+              icon={faArrowUpFromBracket}
+              className={style.icons}
+            />
+            Export
+          </button>
+          <button className={style.createCategory}>+ Create Product</button>
+        </div>
+      </div>
+      <div className={style.bottom}>
+        {tableTab && <TableTab {...tableTab} />}
+        {productProps && <Table {...productProps} />}
+        <Alert severity="info" className={style.alert}>
+          <a href="url" className={style.word}>
+            Learn more about category
+          </a>
+        </Alert>
+      </div>
+    </div>
+  );
+}
