@@ -73,7 +73,7 @@ export default function DataTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result: CategoryDTO[] = await getAllCategory(sessionToken);
+        const result: CategoryDTO[] = await getAllCategory(sessionToken.token);
         if (!Array.isArray(result)) {
           console.error("Unexpected data format:", result);
           return;

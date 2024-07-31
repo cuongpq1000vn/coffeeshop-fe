@@ -64,7 +64,6 @@ function ResponsiveAppBar() {
   };
   const logoutSubmit = async () => {
     const result = await logout();
-    console.log(result);
     router.refresh();
   };
   return (
