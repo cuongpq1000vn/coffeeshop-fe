@@ -127,7 +127,7 @@ export default function DataTable() {
         total: result.content.length,
         active: result.content.filter((product) => product.live).length,
         inActive: result.content.filter((product) => !product.live).length,
-        type: "products"
+        type: "products",
       };
       setTableTab(tableTab);
     };
@@ -137,7 +137,9 @@ export default function DataTable() {
   return (
     <div className={style.all}>
       <div className={style.head}>
-        <div className={style.column}></div>
+        <div className={style.column}>
+          <h1 className="font-bold">Product</h1>
+        </div>
         <div className={style.column}>
           <button className={style.export} onClick={exportData}>
             <FontAwesomeIcon
@@ -154,7 +156,7 @@ export default function DataTable() {
         {productProps && <Table {...productProps} />}
         <Alert severity="info" className={style.alert}>
           <a href="url" className={style.word}>
-            Learn more about category
+            Learn more about Product
           </a>
         </Alert>
       </div>

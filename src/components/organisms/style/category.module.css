@@ -13,8 +13,11 @@
   margin-top: 30px;
 }
 .head {
-  display: flex;
   margin-top: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 }
 .bottom {
   display: flex;
