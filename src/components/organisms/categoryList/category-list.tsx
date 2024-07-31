@@ -116,7 +116,7 @@ export default function DataTable() {
     <div className={style.all}>
       <div className={style.head}>
         <div className={style.column}>
-          <h1>Categories</h1>
+          <h1 className="font-bold">Categories</h1>
         </div>
 
         <div className={style.column}>

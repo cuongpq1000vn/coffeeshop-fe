@@ -27,8 +27,9 @@ import Fade from "@mui/material/Fade";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import Link from "next/link";
 import { logout } from "@/services/AuthService";
-import router from "next/router";
 import { useRouter } from "next/navigation";
+import { GiShoppingCart } from "react-icons/gi";
+
 function ResponsiveAppBar() {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -214,7 +215,7 @@ function ResponsiveAppBar() {
                 </Link>
                 <Link href="/content/table" className={style.iconNavBar}>
                   <MenuItem onClick={handleClose}>
-                    <LocalMallOutlinedIcon /> Table
+                    <GiShoppingCart /> Table
                   </MenuItem>
                 </Link>
                 <Link href="/content/add-on" className={style.iconNavBar}>

@@ -2,6 +2,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppProvider from "@/context/AppProvider";
 import { cookies } from "next/headers";
+import "./globals.css";
 export default function RootLayout({
   children,
 }: {
