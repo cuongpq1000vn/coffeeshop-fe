@@ -70,47 +70,45 @@ export default function DataTable() {
   const [categoryProps, setCategoryProps] = useState<TableProps | null>(null);
   const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
 
-  const fetchData = async () => {
-    try {
-      const result: CategoryDTO[] = await getAllCategory(sessionToken);
-
-      // Check if result is an array
-      if (!Array.isArray(result)) {
-        console.error("Unexpected data format:", result);
-        return;
-      }
-
-      const tableTab: TableTabProps = {
-        total: result.length,
-        active: result.filter((category) => !category.isDeleted).length,
-        inActive: result.filter((category) => category.isDeleted).length,
-      };
-
-      setTableTab(tableTab);
-
-      const categoryValue: TableProps = {
-        columns: columnsTable,
-        rows: result.map((category) => ({
-          id: category.id,
-          Name: category.name,
-          Description: category.normalizedName,
-          status: category.isDeleted ? "Inactive" : "Active",
-          image: category.images[0] || "",
-          action: "",
-        })),
-        pageSize: 5,
-        pageNumber: 0,
-        totalElements: result.length,
-        totalPages: Math.ceil(result.length / 5), // Adjust totalPages based on the number of items per page
-      };
-
-      setCategoryProps(categoryValue);
-    } catch (error) {
-      console.error("Failed to fetch categories:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result: CategoryDTO[] = await getAllCategory(sessionToken);
+        if (!Array.isArray(result)) {
+          console.error("Unexpected data format:", result);
+          return;
+        }
+
+        const tableTab: TableTabProps = {
+          total: result.length,
+          active: result.filter((category) => !category.isDeleted).length,
+          inActive: result.filter((category) => category.isDeleted).length,
+          type: "categories",
+        };
+
+        setTableTab(tableTab);
+
+        const categoryValue: TableProps = {
+          columns: columnsTable,
+          rows: result.map((category) => ({
+            id: category.id,
+            Name: category.name,
+            Description: category.normalizedName,
+            status: category.isDeleted ? "Inactive" : "Active",
+            image: category.images[0] || "",
+            action: "",
+          })),
+          pageSize: 5,
+          pageNumber: 0,
+          totalElements: result.length,
+          totalPages: Math.ceil(result.length / 5),
+        };
+
+        setCategoryProps(categoryValue);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
     fetchData();
   }, [sessionToken]);
 

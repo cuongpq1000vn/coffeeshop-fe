@@ -64,7 +64,7 @@ function ResponsiveAppBar() {
     const result = await logout();
     console.log(result);
     router.refresh();
-  }
+  };
   return (
     <AppBar position="fixed" color="primary">
       <Container maxWidth="xl">
@@ -212,10 +212,12 @@ function ResponsiveAppBar() {
                     <LocalMallOutlinedIcon /> Product
                   </MenuItem>
                 </Link>
-                <Link
-                  href="/content/product-addon"
-                  className={style.iconNavBar}
-                >
+                <Link href="/content/table" className={style.iconNavBar}>
+                  <MenuItem onClick={handleClose}>
+                    <LocalMallOutlinedIcon /> Table
+                  </MenuItem>
+                </Link>
+                <Link href="/content/add-on" className={style.iconNavBar}>
                   <MenuItem onClick={handleClose}>
                     <TuneOutlinedIcon /> Product Add-Ons
                   </MenuItem>

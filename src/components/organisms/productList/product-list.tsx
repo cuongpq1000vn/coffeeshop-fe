@@ -87,34 +87,6 @@ export default function DataTable() {
   const [productProps, setProductProps] = useState<TableProps | null>(null);
   const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
 
-  const fetchData = async () => {
-    const result: PageDTO<ProductDTO> = await getAllProduct(sessionToken);
-    setProducts(result);
-    const category: TableProps = {
-      columns: columnsTable,
-      rows: result.content.map((product) => ({
-        id: product.id,
-        image: product.imgs[0] || "",
-        Name: product.name,
-        Description: product.shortDescription,
-        status: product.live ? "Active" : "Inactive",
-        Price: product.price,
-        Category: product.category ? "Hot Coffee" : "Ice Coffee",
-      })),
-      pageSize: result.pageable.pageSize,
-      pageNumber: result.pageable.pageNumber,
-      totalElements: result.totalElements,
-      totalPages: result.totalPages,
-    };
-    setProductProps(category);
-    const tableTab: TableTabProps = {
-      total: result.content.length,
-      active: result.content.filter((product) => product.live).length,
-      inActive: result.content.filter((product) => !product.live).length,
-    };
-    setTableTab(tableTab);
-  };
-
   const exportData = () => {
     if (!products) return;
     const csvData = products.content.map((product) => ({
@@ -131,6 +103,34 @@ export default function DataTable() {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      const result: PageDTO<ProductDTO> = await getAllProduct(sessionToken);
+      setProducts(result);
+      const category: TableProps = {
+        columns: columnsTable,
+        rows: result.content.map((product) => ({
+          id: product.id,
+          image: product.imgs[0] || "",
+          Name: product.name,
+          Description: product.shortDescription,
+          status: product.live ? "Active" : "Inactive",
+          Price: product.price,
+          Category: product.category ? "Hot Coffee" : "Ice Coffee",
+        })),
+        pageSize: result.pageable.pageSize,
+        pageNumber: result.pageable.pageNumber,
+        totalElements: result.totalElements,
+        totalPages: result.totalPages,
+      };
+      setProductProps(category);
+      const tableTab: TableTabProps = {
+        total: result.content.length,
+        active: result.content.filter((product) => product.live).length,
+        inActive: result.content.filter((product) => !product.live).length,
+        type: "products"
+      };
+      setTableTab(tableTab);
+    };
     fetchData();
   }, [sessionToken]);
 
