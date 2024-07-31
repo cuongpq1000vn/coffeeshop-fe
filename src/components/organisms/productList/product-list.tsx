@@ -105,9 +105,8 @@ export default function DataTable() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result: PageDTO<ProductDTO> = await getAllProduct(sessionToken);
+      const result: PageDTO<ProductDTO> = await getAllProduct(sessionToken.token);
       setProducts(result);
-      console.log(result.content[0].imgs);
       const category: TableProps = {
         columns: columnsTable,
         rows: result.content.map((product) => ({
