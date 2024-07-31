@@ -1,7 +1,7 @@
 "use server";
 
 import { LoginOwnerDTO } from "@/types/dtos/auth/request/LoginOwner";
-import { TokenDTO } from "@/types/dtos/response/Token";
+import { TokenDTO } from "@/types/dtos/auth/Token";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 

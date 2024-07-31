@@ -16,6 +16,7 @@ import { getAllProduct } from "@/services/ProductService";
 import { TableTabProps } from "@/types/TableTab";
 import { convertToCSV, downloadCSV } from "@/util/convertCsv";
 
+const url = process.env.NEXT_PUBLIC_API_URL
 const columnsTable: GridColDef[] = [
   {
     field: "image",
@@ -87,34 +88,6 @@ export default function DataTable() {
   const [productProps, setProductProps] = useState<TableProps | null>(null);
   const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
 
-  const fetchData = async () => {
-    const result: PageDTO<ProductDTO> = await getAllProduct(sessionToken);
-    setProducts(result);
-    const category: TableProps = {
-      columns: columnsTable,
-      rows: result.content.map((product) => ({
-        id: product.id,
-        image: product.imgs[0] || "",
-        Name: product.name,
-        Description: product.shortDescription,
-        status: product.live ? "Active" : "Inactive",
-        Price: product.price,
-        Category: product.category ? "Hot Coffee" : "Ice Coffee",
-      })),
-      pageSize: result.pageable.pageSize,
-      pageNumber: result.pageable.pageNumber,
-      totalElements: result.totalElements,
-      totalPages: result.totalPages,
-    };
-    setProductProps(category);
-    const tableTab: TableTabProps = {
-      total: result.content.length,
-      active: result.content.filter((product) => product.live).length,
-      inActive: result.content.filter((product) => !product.live).length,
-    };
-    setTableTab(tableTab);
-  };
-
   const exportData = () => {
     if (!products) return;
     const csvData = products.content.map((product) => ({
@@ -131,13 +104,44 @@ export default function DataTable() {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      const result: PageDTO<ProductDTO> = await getAllProduct(sessionToken);
+      setProducts(result);
+      console.log(result.content[0].imgs);
+      const category: TableProps = {
+        columns: columnsTable,
+        rows: result.content.map((product) => ({
+          id: product.id,
+          image: url + product.imgs[0] || "",
+          Name: product.name,
+          Description: product.shortDescription,
+          status: product.live ? "Active" : "Inactive",
+          Price: product.price,
+          Category: product.category ? "Hot Coffee" : "Ice Coffee",
+        })),
+        pageSize: result.pageable.pageSize,
+        pageNumber: result.pageable.pageNumber,
+        totalElements: result.totalElements,
+        totalPages: result.totalPages,
+      };
+      setProductProps(category);
+      const tableTab: TableTabProps = {
+        total: result.content.length,
+        active: result.content.filter((product) => product.live).length,
+        inActive: result.content.filter((product) => !product.live).length,
+        type: "products",
+      };
+      setTableTab(tableTab);
+    };
     fetchData();
   }, [sessionToken]);
 
   return (
-    <div className={style.all}>
+    <div>
       <div className={style.head}>
-        <div className={style.column}></div>
+        <div className={style.column}>
+          <h1 className="font-bold text-3xl font-mono leading-10">Products</h1>
+        </div>
         <div className={style.column}>
           <button className={style.export} onClick={exportData}>
             <FontAwesomeIcon
@@ -154,7 +158,7 @@ export default function DataTable() {
         {productProps && <Table {...productProps} />}
         <Alert severity="info" className={style.alert}>
           <a href="url" className={style.word}>
-            Learn more about category
+            Learn more about Product
           </a>
         </Alert>
       </div>

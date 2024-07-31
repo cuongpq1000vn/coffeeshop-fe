@@ -1,6 +1,8 @@
 .label {
   text-align: left;
   margin-bottom: 5px;
+  font-size: 18px;
+  font-family: "Lexend";
   font-weight: bold;
 }
 .email {
@@ -19,6 +21,9 @@
 .remember {
   display: flex;
   align-items: center;
+  font-family: "Lexend";
+  font-size: 18px;
+  font-weight: 100;
 }
 
 .remember button {
@@ -27,6 +32,9 @@
 .forgot {
   display: flex;
   align-items: center;
+  font-family: "Lexend";
+  font-size: 18px;
+  font-weight: 100;
 }
 
 .forgot button {
@@ -117,13 +125,16 @@
 }
 .accountText {
   color: #808080;
-  font-size: 20px;
+  font-size: 24px;
+  font-family: "Lexend";
+  font-weight: 100;
 }
 .signUp {
   outline: none;
   border: none;
   background: white;
-  font-weight: bolder;
-  font-size: 17px;
   cursor: pointer;
+  font-size: 24px;
+  font-family: "Lexend";
+  font-weight: 100;
 }

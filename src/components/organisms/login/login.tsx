@@ -8,7 +8,7 @@ export default function Login() {
       <div className={style.row}>
         <div className={style.column}>
           <div className={style.block}>
-            <h1>Sign in</h1>
+            <h1 className={style.title}>Sign in</h1>
             <LoginForm />
           </div>
         </div>

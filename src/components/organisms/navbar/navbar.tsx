@@ -27,8 +27,10 @@ import Fade from "@mui/material/Fade";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import Link from "next/link";
 import { logout } from "@/services/AuthService";
-import router from "next/router";
 import { useRouter } from "next/navigation";
+import { GiShoppingCart } from "react-icons/gi";
+import { height } from "@fortawesome/free-brands-svg-icons/fa42Group";
+
 function ResponsiveAppBar() {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -64,13 +66,12 @@ function ResponsiveAppBar() {
     const result = await logout();
     console.log(result);
     router.refresh();
-  }
+  };
   return (
     <AppBar position="fixed" color="primary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            className={style.codezx}
             variant="h6"
             noWrap
             component="a"
@@ -78,15 +79,15 @@ function ResponsiveAppBar() {
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
+              fontFamily: "Lexend",
               fontWeight: 700,
               textDecoration: "none",
+              color: "#bcbc0e"
             }}
           >
             CODEZX
           </Typography>
           <Typography
-            className={style.coffeeshop}
             variant="h6"
             noWrap
             component="a"
@@ -94,9 +95,8 @@ function ResponsiveAppBar() {
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
+              fontFamily: "Lexend Exa",
               fontWeight: 700,
-              color: "white",
               textDecoration: "none",
             }}
           >
@@ -212,10 +212,12 @@ function ResponsiveAppBar() {
                     <LocalMallOutlinedIcon /> Product
                   </MenuItem>
                 </Link>
-                <Link
-                  href="/content/product-addon"
-                  className={style.iconNavBar}
-                >
+                <Link href="/content/table" className={style.iconNavBar}>
+                  <MenuItem onClick={handleClose}>
+                    <GiShoppingCart /> Table
+                  </MenuItem>
+                </Link>
+                <Link href="/content/add-on" className={style.iconNavBar}>
                   <MenuItem onClick={handleClose}>
                     <TuneOutlinedIcon /> Product Add-Ons
                   </MenuItem>
