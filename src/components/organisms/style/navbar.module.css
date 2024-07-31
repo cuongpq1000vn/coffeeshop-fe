@@ -1,26 +1,24 @@
 .bar {
-    background-color: black;
+  background-color: black;
 }
 
 .codezx {
-    color: rgb(188, 188, 14)
+  color: rgb(188, 188, 14);
 }
 
 .pagec {
-    margin-right: 50px;
-
+  margin-right: 50px;
 }
 
 .icon {
-    color: #f2f2f2;
+  color: #f2f2f2;
 }
-.iconBar{
-    vertical-align: middle; /* Ensures icon is vertically centered */
+.iconBar {
+  vertical-align: middle; /* Ensures icon is vertically centered */
 }
 
-
-.iconNavBar{
-    text-decoration: none;
-    color: black;
-    vertical-align: middle; /* Ensures icon is vertically centered */
+.iconNavBar {
+  text-decoration: none;
+  color: black;
+  vertical-align: middle; /* Ensures icon is vertically centered */
 }

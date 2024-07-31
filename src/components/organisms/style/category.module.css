@@ -1,23 +1,23 @@
-.all {
-  margin-top: 4%;
-}
 .createCategory {
-  margin-left: 77%;
+  display: flex;
   color: aliceblue;
   background-color: black;
   border-radius: 6px;
   border: none;
   font-size: 12px;
   padding: 10px 20px;
-  width: 150px;
-  margin-top: 30px;
+  width: 160px;
+  align-items: center;
+  justify-content: space-around;
+  float: right;
 }
+
 .head {
-  margin-top: 10%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+  margin-bottom: 10px;
 }
 .bottom {
   display: flex;
@@ -35,7 +35,6 @@
 
 .column {
   flex: 40%;
-  margin-left: 20px;
 }
 .image {
   width: 80px;

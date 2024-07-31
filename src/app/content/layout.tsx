@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <CssBaseline />
       <div className="flex flex-col min-h-screen">
         <NavBar />
-        <div className="flex-grow mt-24">
+        <div className="flex-grow mt-52">
           {children}
         </div>
       </div>

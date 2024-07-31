@@ -15,7 +15,7 @@ import { TableTabProps } from "@/types/TableTab";
 const columnsTable: GridColDef[] = [
   {
     field: "image",
-    headerName: "Product",
+    headerName: "Categories",
     width: 120,
     sortable: false,
     renderCell: (params) => (
@@ -113,10 +113,10 @@ export default function DataTable() {
   }, [sessionToken]);
 
   return (
-    <div className={style.all}>
+    <div>
       <div className={style.head}>
         <div className={style.column}>
-          <h1 className="font-bold">Categories</h1>
+          <h1 className="font-bold text-3xl font-mono leading-10">Categories</h1>
         </div>
 
         <div className={style.column}>

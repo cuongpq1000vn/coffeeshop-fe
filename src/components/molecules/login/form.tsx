@@ -81,7 +81,7 @@ export default function LoginForm() {
         />
         <div className={style.align}>
           <div className={style.remember}>
-            <input type="checkbox" /> Remember me
+            <input type="checkbox"/> Remember me
           </div>
           <div className={style.forgot}>
             <button>Forgot password?</button>
