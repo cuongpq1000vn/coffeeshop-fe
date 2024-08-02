@@ -1,6 +1,6 @@
 "use client";
 import { TokenDTO } from "@/types/dtos/auth/Token";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 const AppContext = createContext({
   sessionToken: {
@@ -34,14 +34,11 @@ export default function AppProvider({
       type: "",
     },
   },
-}: {
+}: Readonly<{
   children: React.ReactNode;
   initialSessionToken?: TokenDTO;
-}) {
+}>) {
   const [sessionToken, setSessionToken] = useState(initialSessionToken);
-  return (
-    <AppContext.Provider value={{ sessionToken, setSessionToken }}>
-      {children}
-    </AppContext.Provider>
-  );
+  const obj = useMemo(() => ({ sessionToken, setSessionToken }), []);
+  return <AppContext.Provider value={obj}>{children}</AppContext.Provider>;
 }

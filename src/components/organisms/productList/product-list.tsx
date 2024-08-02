@@ -16,7 +16,7 @@ import { getAllProduct } from "@/services/ProductService";
 import { TableTabProps } from "@/types/TableTab";
 import { convertToCSV, downloadCSV } from "@/util/convertCsv";
 
-const url = process.env.NEXT_PUBLIC_API_URL
+const url = process.env.NEXT_PUBLIC_API_URL;
 const columnsTable: GridColDef[] = [
   {
     field: "image",
@@ -83,29 +83,52 @@ const columnsTable: GridColDef[] = [
 ];
 
 export default function DataTable() {
+  const MAX_VALUE = 1000000;
   const { sessionToken } = useAppContext();
   const [products, setProducts] = useState<PageDTO<ProductDTO> | null>(null);
   const [productProps, setProductProps] = useState<TableProps | null>(null);
   const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 0,
+  });
 
-  const exportData = () => {
-    if (!products) return;
-    const csvData = products.content.map((product) => ({
-      id: product.id,
-      image: product.imgs[0] || "",
-      Name: product.name,
-      Description: product.shortDescription,
-      status: product.live ? "Active" : "Inactive",
-      Price: product.price,
-      Category: product.category ? "Hot Coffee" : "Ice Coffee",
-    }));
-    const csv = convertToCSV(csvData);
-    downloadCSV(csv, "products.csv");
+  const exportData = async () => {
+    try {
+      const result: PageDTO<ProductDTO> = await getAllProduct(
+        sessionToken.token,
+        0,
+        MAX_VALUE
+      );
+      if (!result) {
+        console.error("Unexpected data format:", result);
+      }
+
+      const csvData = result.content.map((product) => ({
+        id: product.id,
+        image: product.imgs[0] || "",
+        Name: product.name,
+        Description: product.shortDescription,
+        status: product.live ? "Active" : "Inactive",
+        Price: product.price,
+        Category: product.category ? "Hot Coffee" : "Ice Coffee",
+      }));
+      const csv = convertToCSV(csvData);
+      downloadCSV(csv, "products.csv");
+    } catch (error) {
+      console.error("Failed to download:", error);
+    }
   };
-
+  const handlePaginationModelChange = (newPaginationModel: any) => {
+    setPaginationModel(newPaginationModel);
+  };
   useEffect(() => {
     const fetchData = async () => {
-      const result: PageDTO<ProductDTO> = await getAllProduct(sessionToken.token);
+      const result: PageDTO<ProductDTO> = await getAllProduct(
+        sessionToken.token,
+        paginationModel.page,
+        paginationModel.pageSize
+      );
       setProducts(result);
       const category: TableProps = {
         columns: columnsTable,
@@ -133,7 +156,7 @@ export default function DataTable() {
       setTableTab(tableTab);
     };
     fetchData();
-  }, [sessionToken]);
+  }, [sessionToken, paginationModel]);
 
   return (
     <div>
@@ -154,7 +177,12 @@ export default function DataTable() {
       </div>
       <div className={style.bottom}>
         {tableTab && <TableTab {...tableTab} />}
-        {productProps && <Table {...productProps} />}
+        {productProps && (
+          <Table
+            table={productProps}
+            handleChange={handlePaginationModelChange}
+          />
+        )}
         <Alert severity="info" className={style.alert}>
           <a href="url" className={style.word}>
             Learn more about Product

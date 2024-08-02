@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AppProvider initialSessionToken={JSON.parse(sessionToken?.value!) as TokenDTO}>
+        <AppProvider initialSessionToken={JSON.parse(sessionToken?.value || '{}') as TokenDTO}>
           {children} <ToastContainer />
         </AppProvider>
       </body>

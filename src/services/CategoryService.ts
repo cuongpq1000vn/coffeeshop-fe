@@ -5,11 +5,11 @@ import { NextResponse } from "next/server";
 const COFFEE_SHOP_URL = process.env.COFFEE_SHOP_URL;
 const CONTEXT_PATH = process.env.CONTEXT_PATH_COFFEE_SHOP_CATEGORY_PRODUCT_API;
 
-export async function getAllCategory(sessionToken: string) {
+export async function getAllCategory(sessionToken: string, page: number, size: number) {
   const requestId = crypto.randomUUID();
   try {
     const response = await fetch(
-      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/api/category/${requestId}/getAll`,
+      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/api/category/${requestId}/getAll?page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {
