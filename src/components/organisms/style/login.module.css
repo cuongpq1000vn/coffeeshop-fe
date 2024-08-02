@@ -36,26 +36,7 @@
   left: 223px;
 }
 
-@media only screen and (max-width: 740px ) {
-  .row{
-    flex-direction: column-reverse;
-    background-image: url("/images/image1.png");
-  }
-  .block{
-    background-color: white;
-    width: 380px;
-    margin-bottom: 50px;
-    padding-bottom: 25px;
-    padding-top: 20px;
-    padding-left: 40px;
-    padding-right: 20px;
-
-  
-  }
-  
-
-}
-@media only screen and (min-width: 740px) and (max-width: 1240px ) {
+@media only screen and (min-width: 740px) and (max-width: 1440px ) {
   .row{
     flex-direction: column-reverse;
     background-image: url("/images/image1.png");
@@ -72,7 +53,9 @@
 
   
   }
-  
+  .image{
+    display: none;
+  }
 
 }
 
