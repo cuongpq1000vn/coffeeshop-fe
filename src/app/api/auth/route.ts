@@ -1,8 +1,7 @@
 import { TokenDTO } from "@/types/dtos/auth/Token";
-import { cookies } from "next/headers";
 export async function POST(request: Request) {
   const res = await request.json() as TokenDTO;
-  const sessionToken = res.token;
+  const sessionToken = JSON.stringify(res);
   if (!sessionToken) {
     return Response.json(
       { message: "Error token" },

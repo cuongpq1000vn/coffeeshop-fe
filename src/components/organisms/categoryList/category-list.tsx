@@ -69,11 +69,22 @@ export default function DataTable() {
   const { sessionToken } = useAppContext();
   const [categoryProps, setCategoryProps] = useState<TableProps | null>(null);
   const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 0,
+  });
+  const handlePaginationModelChange = (newPaginationModel: any) => {
+    setPaginationModel(newPaginationModel);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result: CategoryDTO[] = await getAllCategory(sessionToken.token);
+        const result: CategoryDTO[] = await getAllCategory(
+          sessionToken.token,
+          paginationModel.page,
+          paginationModel.pageSize
+        );
         if (!Array.isArray(result)) {
           console.error("Unexpected data format:", result);
           return;
@@ -116,7 +127,9 @@ export default function DataTable() {
     <div>
       <div className={style.head}>
         <div className={style.column}>
-          <h1 className="font-bold text-3xl font-mono leading-10">Categories</h1>
+          <h1 className="font-bold text-3xl font-mono leading-10">
+            Categories
+          </h1>
         </div>
 
         <div className={style.column}>
@@ -125,7 +138,12 @@ export default function DataTable() {
       </div>
       <div className={style.bottom}>
         {tableTab && <TableTab {...tableTab} />}
-        {categoryProps && <Table {...categoryProps} />}
+        {categoryProps && (
+          <Table
+            table={categoryProps}
+            handleChange={handlePaginationModelChange}
+          />
+        )}
         <Alert severity="info" className={style.alert}>
           <a href="url" className={style.word}>
             Learn more about category
