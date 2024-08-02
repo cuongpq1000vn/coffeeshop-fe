@@ -4,17 +4,17 @@ import { GridColDef } from "@mui/x-data-grid";
 import style from "../style/product.module.css";
 import { Alert, IconButton, Avatar } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Table, TableTab } from "@/components/molecules";
+import { ProductModal, Table, TableTab } from "@/components/molecules";
 import { TableProps } from "@/types/Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { useAppContext } from "@/context/AppProvider";
 import { PageDTO } from "@/types/Page";
 import { ProductDTO } from "@/types/dtos/categoryProduct/Product";
-import { getAllProduct } from "@/services/ProductService";
+import { createProduct, getAllProduct } from "@/services/ProductService";
 import { TableTabProps } from "@/types/TableTab";
 import { convertToCSV, downloadCSV } from "@/util/convertCsv";
+import { ProductRequest } from "@/types/dtos/categoryProduct/request/ProductRequest";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 const columnsTable: GridColDef[] = [
@@ -47,7 +47,7 @@ const columnsTable: GridColDef[] = [
   {
     field: "Price",
     headerName: "Price",
-    sortable: false,
+    sortable: true,
     width: 300,
   },
   {
@@ -84,22 +84,16 @@ const columnsTable: GridColDef[] = [
 
 export default function DataTable() {
   const MAX_VALUE = 1000000;
-  const { sessionToken } = useAppContext();
-  const [products, setProducts] = useState<PageDTO<ProductDTO> | null>(null);
   const [productProps, setProductProps] = useState<TableProps | null>(null);
   const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 0,
   });
-
+  const [modalOpen, setModalOpen] = useState(false);
   const exportData = async () => {
     try {
-      const result: PageDTO<ProductDTO> = await getAllProduct(
-        sessionToken.token,
-        0,
-        MAX_VALUE
-      );
+      const result: PageDTO<ProductDTO> = await getAllProduct(0, MAX_VALUE);
       if (!result) {
         console.error("Unexpected data format:", result);
       }
@@ -122,14 +116,24 @@ export default function DataTable() {
   const handlePaginationModelChange = (newPaginationModel: any) => {
     setPaginationModel(newPaginationModel);
   };
+  const handleCreateProduct = async (product: ProductRequest) => {
+    try {
+      const productDTO: ProductDTO = await createProduct(product);
+      if (!productDTO) {
+        console.error("Unexpected data format:", productDTO);
+      }
+
+      console.log(productDTO.category);
+    } catch (error) {
+      console.error("Failed to create:", error);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       const result: PageDTO<ProductDTO> = await getAllProduct(
-        sessionToken.token,
         paginationModel.page,
         paginationModel.pageSize
       );
-      setProducts(result);
       const category: TableProps = {
         columns: columnsTable,
         rows: result.content.map((product) => ({
@@ -156,7 +160,7 @@ export default function DataTable() {
       setTableTab(tableTab);
     };
     fetchData();
-  }, [sessionToken, paginationModel]);
+  }, [paginationModel]);
 
   return (
     <div>
@@ -172,7 +176,12 @@ export default function DataTable() {
             />
             Export
           </button>
-          <button className={style.createCategory}>+ Create Product</button>
+          <button
+            className={style.createCategory}
+            onClick={() => setModalOpen(true)}
+          >
+            + Create Product
+          </button>
         </div>
       </div>
       <div className={style.bottom}>
@@ -189,6 +198,11 @@ export default function DataTable() {
           </a>
         </Alert>
       </div>
+      <ProductModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleCreateProduct}
+      />
     </div>
   );
 }

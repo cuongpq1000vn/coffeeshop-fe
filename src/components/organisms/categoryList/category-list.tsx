@@ -7,10 +7,10 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Table, TableTab } from "@/components/molecules";
 import { TableProps } from "@/types/Table";
 import { getAllCategory } from "@/services/CategoryService";
-import { useAppContext } from "@/context/AppProvider";
 import { useEffect, useState } from "react";
 import { CategoryDTO } from "@/types/dtos/categoryProduct/Category";
 import { TableTabProps } from "@/types/TableTab";
+import { PageDTO } from "@/types/Page";
 
 const columnsTable: GridColDef[] = [
   {
@@ -66,7 +66,6 @@ const columnsTable: GridColDef[] = [
 ];
 
 export default function DataTable() {
-  const { sessionToken } = useAppContext();
   const [categoryProps, setCategoryProps] = useState<TableProps | null>(null);
   const [tableTab, setTableTab] = useState<TableTabProps | null>(null);
   const [paginationModel, setPaginationModel] = useState({
@@ -80,8 +79,7 @@ export default function DataTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result: CategoryDTO[] = await getAllCategory(
-          sessionToken.token,
+        const result: PageDTO<CategoryDTO> = await getAllCategory(
           paginationModel.page,
           paginationModel.pageSize
         );
@@ -109,10 +107,10 @@ export default function DataTable() {
             image: category.images[0] || "",
             action: "",
           })),
-          pageSize: 5,
-          pageNumber: 0,
-          totalElements: result.length,
-          totalPages: Math.ceil(result.length / 5),
+          pageSize: result.pageable.pageSize,
+          pageNumber: result.pageable.pageNumber,
+          totalElements: result.totalElements,
+          totalPages: result.totalPages,
         };
 
         setCategoryProps(categoryValue);
@@ -121,7 +119,7 @@ export default function DataTable() {
       }
     };
     fetchData();
-  }, [sessionToken]);
+  }, [paginationModel]);
 
   return (
     <div>

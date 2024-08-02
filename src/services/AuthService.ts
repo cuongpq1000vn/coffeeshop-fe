@@ -10,6 +10,7 @@ const CONTEXT_PATH = process.env.CONTEXT_PATH_COFFEE_SHOP_USER_API;
 const HEADER_DEFAULT_TOKEN = process.env.DEFAULT_TOKEN;
 export async function login(data: LoginOwnerDTO): Promise<TokenDTO> {
   const requestId = crypto.randomUUID();
+  console.log(`${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/owners/${requestId}/sign-in`);
   try {
     const response = await fetch(
       `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/owners/${requestId}/sign-in`,
