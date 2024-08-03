@@ -13,6 +13,7 @@ import { MdAdd } from "react-icons/md";
 import { uploadImage } from "@/services/ImageService";
 import { ImageProps } from "@/types/dtos/image/ImageProps";
 import style from "../style/category-modal.module.css";
+import Image from "next/image";
 
 type CreateCategoryModalProps = {
   open: boolean;
@@ -101,7 +102,7 @@ export default function CategoryModal({
           <div className="flex gap-6 mt-5">
             <div className="w-32 h-32 border-2 border-dashed border-gray-300 flex items-center justify-center">
               {category.images ? (
-                <img
+                <Image
                   src={category.images[0]}
                   alt="Product"
                   className="object-cover w-32 h-32"
