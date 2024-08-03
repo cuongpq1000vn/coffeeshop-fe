@@ -23,7 +23,7 @@ export async function getAllCategory(page: number, size: number) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "user-type": `${accessToken.userType.type}`,
+          "user-type": `${accessToken.userType}`,
           "store-id": `${accessToken.storeId}`,
           "x-access-token": `${accessToken.token}`,
         },
@@ -56,7 +56,7 @@ export async function createCategory(category: CategoryRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "user-type": `${accessToken.userType.type}`,
+          "user-type": `${accessToken.userType}`,
           "store-id": `${accessToken.storeId}`,
           "x-access-token": `${accessToken.token}`,
         },

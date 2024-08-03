@@ -26,7 +26,7 @@ export async function uploadImage(
       {
         method: "POST",
         headers: {
-          "user-type": `${accessToken.userType.type}`,
+          "user-type": `${accessToken.userType}`,
           "store-id": `${accessToken.storeId}`,
           "x-access-token": `${accessToken.token}`,
           "Content-Type": "multipart/form-data",

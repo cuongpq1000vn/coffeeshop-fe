@@ -29,7 +29,7 @@ export default function ProductModal({
   const [product, setProduct] = useState<ProductRequest>({
     name: "",
     price: 0,
-    isLive: false,
+    live: false,
     countSale: 0,
     finalPrice: 0,
     longDescription: "",
@@ -38,7 +38,7 @@ export default function ProductModal({
     storeId: "",
     category: 0,
     note: "",
-    isRecommended: false,
+    recommended: false,
     discountFrom: new Date(),
     discountTo: new Date(),
     discountAmount: 0,

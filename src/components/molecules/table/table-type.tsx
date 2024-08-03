@@ -13,7 +13,6 @@ export default function Table({
   table,
   handleChange,
 }: Readonly<TableHandleProps>) {
-  console.log(table)
   const paginationModel = {
     page: table.pageNumber,
     pageSize: table.pageSize,

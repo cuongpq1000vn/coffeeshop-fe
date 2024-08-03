@@ -1,7 +1,7 @@
 export type ProductRequest = {
   name: string;
   price: number;
-  isLive: boolean;
+  live: boolean;
   countSale: number;
   finalPrice: number;
   longDescription: string;
@@ -10,7 +10,7 @@ export type ProductRequest = {
   storeId: string;
   category: number;
   note: string;
-  isRecommended: boolean;
+  recommended: boolean;
   discountFrom: Date;
   discountTo: Date;
   discountAmount: number;

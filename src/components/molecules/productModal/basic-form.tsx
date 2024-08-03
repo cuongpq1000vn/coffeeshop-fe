@@ -106,11 +106,11 @@ export default function BasicInformation({
               Is Recommended
             </label>
             <input
-              id="isRecommended"
-              name="isRecommended"
+              id="recommended"
+              name="recommended"
               type="checkbox"
               className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
-              checked={product.isRecommended}
+              checked={product.recommended}
               onChange={handleInputChange}
             />
           </div>
@@ -119,11 +119,11 @@ export default function BasicInformation({
               Is Live
             </label>
             <input
-              id="isLive"
-              name="isLive"
+              id="live"
+              name="live"
               type="checkbox"
               className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
-              checked={product.isLive}
+              checked={product.live}
               onChange={handleInputChange}
             />
           </div>

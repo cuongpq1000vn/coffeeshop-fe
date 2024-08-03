@@ -122,8 +122,6 @@ export default function DataTable() {
       if (!productDTO) {
         console.error("Unexpected data format:", productDTO);
       }
-
-      console.log(productDTO.category);
     } catch (error) {
       console.error("Failed to create:", error);
     }

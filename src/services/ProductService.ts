@@ -24,7 +24,7 @@ export async function getAllProduct(page: number, size: number) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "user-type": `${accessToken.userType.type}`,
+          "user-type": `${accessToken.userType}`,
           "store-id": `${accessToken.storeId}`,
           "x-access-token": `${accessToken.token}`,
         },
@@ -49,6 +49,7 @@ export async function createProduct(product: ProductRequest) {
     throw NextResponse.json({ response: { status: 401 } });
   }
   const accessToken = JSON.parse(token) as TokenDTO;
+  console.log(accessToken.userType);
   product.storeId = accessToken.storeId;
   try {
     const response = await fetch(
@@ -57,7 +58,7 @@ export async function createProduct(product: ProductRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "user-type": `${accessToken.userType.type}`,
+          "user-type": `${accessToken.userType}`,
           "store-id": `${accessToken.storeId}`,
           "x-access-token": `${accessToken.token}`,
         },
