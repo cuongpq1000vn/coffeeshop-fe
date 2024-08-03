@@ -3,15 +3,15 @@ import style from "../style/basic-information.module.css";
 
 type BasicInformationProps = {
   product: ProductRequest;
-  handleCategoryChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   handleInputChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => void;
 };
 
 export default function BasicInformation({
   product,
-  handleCategoryChange,
   handleInputChange,
 }: Readonly<BasicInformationProps>) {
   const categories = [
@@ -73,7 +73,7 @@ export default function BasicInformation({
           id="category"
           name="category"
           value={product.category}
-          onChange={handleCategoryChange}
+          onChange={handleInputChange}
           required
         >
           <option value="" disabled>

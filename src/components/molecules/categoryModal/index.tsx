@@ -1,5 +1,5 @@
 "use client";
-
+import { CategoryRequest } from "@/types/dtos/categoryProduct/request/CategoryRequest";
 import {
   Button,
   Dialog,
@@ -8,41 +8,27 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useState } from "react";
-import style from "../style/product-modal.module.css";
+import CategoryForm from "./basic-form";
 import { MdAdd } from "react-icons/md";
-import BasicInformation from "./basic-form";
-import { ProductRequest } from "@/types/dtos/categoryProduct/request/ProductRequest";
 import { uploadImage } from "@/services/ImageService";
 import { ImageProps } from "@/types/dtos/image/ImageProps";
+import style from "../style/category-modal.module.css";
 
-type CreateProductModalProps = {
+type CreateCategoryModalProps = {
   open: boolean;
   onClose: () => void;
-  onSubmit: (product: ProductRequest) => void;
+  onSubmit: (category: CategoryRequest) => void;
 };
-
-export default function ProductModal({
+export default function CategoryModal({
   open,
   onClose,
   onSubmit,
-}: Readonly<CreateProductModalProps>) {
-  const [product, setProduct] = useState<ProductRequest>({
+}: Readonly<CreateCategoryModalProps>) {
+  const [category, setCategory] = useState<CategoryRequest>({
     name: "",
-    price: 0,
-    isLive: false,
-    countSale: 0,
-    finalPrice: 0,
-    longDescription: "",
-    shortDescription: "",
-    images: [],
+    parent: 0,
     storeId: "",
-    category: 0,
-    note: "",
-    isRecommended: false,
-    discountFrom: new Date(),
-    discountTo: new Date(),
-    discountAmount: 0,
-    discountPercent: 0,
+    images: [],
   });
 
   const handleInputChange = (
@@ -53,21 +39,25 @@ export default function ProductModal({
     const { name, type, value } = event.target;
     if (type === "checkbox" || type === "radio") {
       const target = event.target as HTMLInputElement;
-      setProduct((prevProduct) => ({
+      setCategory((prevProduct) => ({
         ...prevProduct,
         [name]: target.checked,
       }));
     } else if (type === "number" || type === "select-one") {
-      setProduct((prevProduct) => ({
+      setCategory((prevProduct) => ({
         ...prevProduct,
         [name]: Number(value),
       }));
     } else {
-      setProduct((prevProduct) => ({
+      setCategory((prevProduct) => ({
         ...prevProduct,
         [name]: value,
       }));
     }
+  };
+  const handleSubmit = () => {
+    onSubmit(category);
+    onClose();
   };
 
   const handleImageChange = async (
@@ -85,7 +75,7 @@ export default function ProductModal({
         if (!imageUrl) {
           console.error("Unexpected data format:", imageUrl);
         }
-        setProduct((prevProduct) => ({
+        setCategory((prevProduct) => ({
           ...prevProduct,
           images: imageUrl.links,
         }));
@@ -95,20 +85,12 @@ export default function ProductModal({
     }
   };
 
-  const handleSubmit = () => {
-    onSubmit(product);
-    onClose();
-  };
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle className={style.title}>
-        Create New Product <hr className="mt-4" />
-      </DialogTitle>
+      <DialogTitle>Create New Category</DialogTitle>
       <DialogContent>
-        <h1 className={style.contentHeader}>Basic Information</h1>
-        <BasicInformation
-          product={product}
+        <CategoryForm
+          category={category}
           handleInputChange={handleInputChange}
         />
         <hr className="mt-4 mb-4" />
@@ -118,9 +100,9 @@ export default function ProductModal({
           </label>
           <div className="flex gap-6 mt-5">
             <div className="w-32 h-32 border-2 border-dashed border-gray-300 flex items-center justify-center">
-              {product.images ? (
+              {category.images ? (
                 <img
-                  src={product.images[0]}
+                  src={category.images[0]}
                   alt="Product"
                   className="object-cover w-32 h-32"
                 />
@@ -146,62 +128,6 @@ export default function ProductModal({
                 id="productImage"
                 className="opacity-0 absolute cursor-pointer w-32 h-32"
                 onChange={handleImageChange}
-              />
-            </div>
-          </div>
-        </div>
-        <hr className="mt-4 mb-4" />
-        <div>
-          <label htmlFor="saleInfo" className={style.titleImage}>
-            Sale information
-          </label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-            <div>
-              <label htmlFor="price" className={style.label}>
-                Price
-              </label>
-              <input
-                type="number"
-                id="price"
-                name="price"
-                aria-describedby="helper-text-explanation"
-                className={style.inputSmaller}
-                placeholder="$100.00"
-                required
-                value={product.price}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="finalPrice" className={style.label}>
-                Final Price
-              </label>
-              <input
-                type="number"
-                id="finalPrice"
-                name="finalPrice"
-                aria-describedby="helper-text-explanation"
-                className={style.inputSmaller}
-                placeholder="$50.00"
-                required
-                value={product.finalPrice}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="countSale" className={style.label}>
-                Count Sale
-              </label>
-              <input
-                type="number"
-                id="countSale"
-                name="countSale"
-                aria-describedby="helper-text-explanation"
-                className={style.inputSmaller}
-                placeholder="Enter count sale"
-                required
-                value={product.countSale}
-                onChange={handleInputChange}
               />
             </div>
           </div>

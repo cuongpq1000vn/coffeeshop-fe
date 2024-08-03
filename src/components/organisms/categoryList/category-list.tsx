@@ -4,13 +4,14 @@ import { GridColDef } from "@mui/x-data-grid";
 import style from "../style/category.module.css";
 import { Alert, IconButton, Avatar } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Table, TableTab } from "@/components/molecules";
+import { CategoryModal, Table, TableTab } from "@/components/molecules";
 import { TableProps } from "@/types/Table";
-import { getAllCategory } from "@/services/CategoryService";
+import { createCategory, getAllCategory } from "@/services/CategoryService";
 import { useEffect, useState } from "react";
 import { CategoryDTO } from "@/types/dtos/categoryProduct/Category";
 import { TableTabProps } from "@/types/TableTab";
 import { PageDTO } from "@/types/Page";
+import { CategoryRequest } from "@/types/dtos/categoryProduct/request/CategoryRequest";
 
 const columnsTable: GridColDef[] = [
   {
@@ -72,10 +73,20 @@ export default function DataTable() {
     page: 0,
     pageSize: 0,
   });
+  const [modalOpen, setModalOpen] = useState(false);
   const handlePaginationModelChange = (newPaginationModel: any) => {
     setPaginationModel(newPaginationModel);
   };
-
+  const handleCreateCategory = async (category: CategoryRequest) => {
+    try {
+      const categoryDTO: CategoryDTO = await createCategory(category);
+      if (!categoryDTO) {
+        console.error("Unexpected data format:", categoryDTO);
+      }
+    } catch (error) {
+      console.error("Failed to create:", error);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -131,7 +142,12 @@ export default function DataTable() {
         </div>
 
         <div className={style.column}>
-          <button className={style.createCategory}>+ Create Categories</button>
+          <button
+            className={style.createCategory}
+            onClick={() => setModalOpen(true)}
+          >
+            + Create Categories
+          </button>
         </div>
       </div>
       <div className={style.bottom}>
@@ -148,6 +164,11 @@ export default function DataTable() {
           </a>
         </Alert>
       </div>
+      <CategoryModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleCreateCategory}
+      />
     </div>
   );
 }
