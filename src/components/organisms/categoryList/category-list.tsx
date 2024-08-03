@@ -94,15 +94,13 @@ export default function DataTable() {
           paginationModel.page,
           paginationModel.pageSize
         );
-        if (!Array.isArray(result)) {
-          console.error("Unexpected data format:", result);
-          return;
-        }
 
         const tableTab: TableTabProps = {
-          total: result.length,
-          active: result.filter((category) => !category.isDeleted).length,
-          inActive: result.filter((category) => category.isDeleted).length,
+          total: result.content.length,
+          active: result.content.filter((category) => !category.isDeleted)
+            .length,
+          inActive: result.content.filter((category) => category.isDeleted)
+            .length,
           type: "categories",
         };
 
@@ -110,7 +108,7 @@ export default function DataTable() {
 
         const categoryValue: TableProps = {
           columns: columnsTable,
-          rows: result.map((category) => ({
+          rows: result.content.map((category) => ({
             id: category.id,
             Name: category.name,
             Description: category.normalizedName,
@@ -123,7 +121,6 @@ export default function DataTable() {
           totalElements: result.totalElements,
           totalPages: result.totalPages,
         };
-
         setCategoryProps(categoryValue);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
