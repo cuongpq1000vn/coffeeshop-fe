@@ -1,5 +1,11 @@
+"use client"
 import { CategoryRequest } from "@/types/dtos/categoryProduct/request/CategoryRequest";
 import style from "../style/category-information.module.css";
+import { SetStateAction, useEffect, useState } from "react";
+import { CategoryLabel } from "@/types/CategoryLabel";
+import { getAllCategory } from "@/services/CategoryService";
+import { CategoryDTO } from "@/types/dtos/categoryProduct/Category";
+import { PageDTO } from "@/types/Page";
 type CategoryInformationProps = {
   category: CategoryRequest;
   handleInputChange: (
@@ -8,16 +14,36 @@ type CategoryInformationProps = {
     >
   ) => void;
 };
-const categories = [
-  { value: "1", label: "Category 1" },
-  { value: "2", label: "Category 2" },
-  { value: "3", label: "Category 3" },
-];
 
 export default function CategoryForm({
   category,
   handleInputChange,
 }: Readonly<CategoryInformationProps>) {
+  const [categoryOption, setCategoryOption] = useState<CategoryLabel[]>([]);
+
+  useEffect(() => {
+    const getAllCategories = async () => {
+      try {
+        const result: PageDTO<CategoryDTO> = await getAllCategory(0, 1000000);
+        if (!result) {
+          console.error("Unexpected data format:", result);
+        }
+        const categoryGroup: SetStateAction<CategoryLabel[]> = [];
+        result.content.forEach((elm) => {
+          const content = {
+            value: elm.id.toString(),
+            label: elm.name,
+          };
+          categoryGroup.push(content);
+        });
+        setCategoryOption(categoryGroup);
+      } catch (error) {
+        console.error("Failed to get all categories:", error);
+      }
+    };
+    getAllCategories();
+  }, []);
+
   return (
     <div>
       <hr className="mt-4 mb-4" />
@@ -36,7 +62,7 @@ export default function CategoryForm({
         required
       />
       <label htmlFor="category" className={style.label}>
-        Product Category
+        Category Parent
       </label>
       <select
         className={`${style.inputBox} mb-4`}
@@ -49,8 +75,7 @@ export default function CategoryForm({
         <option value="" disabled>
           Select Category
         </option>
-        {categories.map((category) => (
-            
+        {categoryOption.map((category) => (
           <option key={category.value} value={category.value}>
             {category.label}
           </option>

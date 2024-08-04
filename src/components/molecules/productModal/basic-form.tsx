@@ -1,5 +1,11 @@
+"use client";
 import { ProductRequest } from "@/types/dtos/categoryProduct/request/ProductRequest";
 import style from "../style/basic-information.module.css";
+import { PageDTO } from "@/types/Page";
+import { CategoryDTO } from "@/types/dtos/categoryProduct/Category";
+import { getAllCategory } from "@/services/CategoryService";
+import { SetStateAction, useEffect, useState } from "react";
+import { CategoryLabel } from "@/types/CategoryLabel";
 
 type BasicInformationProps = {
   product: ProductRequest;
@@ -14,11 +20,30 @@ export default function BasicInformation({
   product,
   handleInputChange,
 }: Readonly<BasicInformationProps>) {
-  const categories = [
-    { value: "1", label: "Category 1" },
-    { value: "2", label: "Category 2" },
-    { value: "3", label: "Category 3" },
-  ];
+  const [categoryOption, setCategoryOption] = useState<CategoryLabel[]>([]);
+
+  useEffect(() => {
+    const getAllCategories = async () => {
+      try {
+        const result: PageDTO<CategoryDTO> = await getAllCategory(0, 1000000);
+        if (!result) {
+          console.error("Unexpected data format:", result);
+        }
+        const categoryGroup: SetStateAction<CategoryLabel[]> = [];
+        result.content.forEach((elm) => {
+          const content = {
+            value: elm.id.toString(),
+            label: elm.name,
+          };
+          categoryGroup.push(content);
+        });
+        setCategoryOption(categoryGroup);
+      } catch (error) {
+        console.error("Failed to get all categories:", error);
+      }
+    };
+    getAllCategories();
+  }, []);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -79,7 +104,7 @@ export default function BasicInformation({
           <option value="" disabled>
             Select Category
           </option>
-          {categories.map((category) => (
+          {categoryOption.map((category) => (
             <option key={category.value} value={category.value}>
               {category.label}
             </option>
