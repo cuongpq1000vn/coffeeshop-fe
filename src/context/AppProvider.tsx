@@ -8,9 +8,7 @@ const AppContext = createContext({
     account: "",
     token: "",
     expiresAt: new Date(),
-    userType: {
-      type: "",
-    },
+    userType: "",
   },
   setSessionToken: (sessionToken: TokenDTO) => {},
 });
@@ -30,15 +28,13 @@ export default function AppProvider({
     account: "",
     token: "",
     expiresAt: new Date(),
-    userType: {
-      type: "",
-    },
+    userType: "",
   },
 }: Readonly<{
   children: React.ReactNode;
   initialSessionToken?: TokenDTO;
 }>) {
   const [sessionToken, setSessionToken] = useState(initialSessionToken);
-  const obj = useMemo(() => ({ sessionToken, setSessionToken }), []);
+  const obj = useMemo(() => ({ sessionToken, setSessionToken }), [sessionToken]);
   return <AppContext.Provider value={obj}>{children}</AppContext.Provider>;
 }

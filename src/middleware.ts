@@ -22,7 +22,7 @@ export async function verifyToken(token: string): Promise<string> {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(tokenRequest),
       }
@@ -46,7 +46,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
     const isTokenValid = await verifyToken(session);
-
     // already has token
     if (!isTokenValid) {
       return NextResponse.redirect(new URL("/login", request.url));
