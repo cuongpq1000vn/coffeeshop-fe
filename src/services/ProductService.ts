@@ -49,7 +49,6 @@ export async function createProduct(product: ProductRequest) {
     throw NextResponse.json({ response: { status: 401 } });
   }
   const accessToken = JSON.parse(token) as TokenDTO;
-  console.log(accessToken.userType);
   product.storeId = accessToken.storeId;
   try {
     const response = await fetch(
@@ -77,9 +76,72 @@ export async function createProduct(product: ProductRequest) {
   }
 }
 
-export async function updateProduct() {
-  const requestId = crypto.randomUUID();
+export async function updateProduct(
+  productId: string,
+  product: ProductRequest
+) {
+  console.log(JSON.stringify(product));
   try {
+    const requestId = crypto.randomUUID();
+    const token = cookies().get("sessionToken")?.value;
+    if (!token) {
+      throw NextResponse.json({ response: { status: 401 } });
+    }
+    const accessToken = JSON.parse(token) as TokenDTO;
+    product.storeId = accessToken.storeId;
+    console.log(productId)
+    const response = await fetch(
+      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/product/${requestId}/${productId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "user-type": `${accessToken.userType}`,
+          "store-id": `${accessToken.storeId}`,
+          "x-access-token": `${accessToken.token}`,
+        },
+        body: JSON.stringify(product),
+      }
+    );
+    if (!response.ok) {
+      console.log(`HTTP error! status: ${response.status}`);
+      throw NextResponse.json({ response: { status: response.status } });
+    }
+    const result = (await response.json()) as ProductDTO;
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw NextResponse.json({ response: { status: 500 } });
+  }
+}
+
+export async function deleteProduct(productId: string) {
+  try {
+    const requestId = crypto.randomUUID();
+    const token = cookies().get("sessionToken")?.value;
+    if (!token) {
+      throw NextResponse.json({ response: { status: 401 } });
+    }
+    const accessToken = JSON.parse(token) as TokenDTO;
+    console.log("hit");
+    const response = await fetch(
+      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/product/${requestId}/${productId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "user-type": `${accessToken.userType}`,
+          "store-id": `${accessToken.storeId}`,
+          "x-access-token": `${accessToken.token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      console.log(`HTTP error! status: ${response.status}`);
+      throw NextResponse.json({ response: { status: response.status } });
+    }
+    const result = (await response.json()) as ProductDTO;
+    return result;
   } catch (err) {
     console.log(err);
     throw NextResponse.json({ response: { status: 500 } });

@@ -75,9 +75,69 @@ export async function createCategory(category: CategoryRequest) {
   }
 }
 
-export async function updateCategory() {
-  const requestId = crypto.randomUUID();
+export async function updateCategory(
+  categoryId: number,
+  category: CategoryRequest
+) {
   try {
+    const requestId = crypto.randomUUID();
+    const token = cookies().get("sessionToken")?.value;
+    if (!token) {
+      throw NextResponse.json({ response: { status: 401 } });
+    }
+    const accessToken = JSON.parse(token) as TokenDTO;
+    category.storeId = accessToken.storeId;
+    const response = await fetch(
+      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/category/${requestId}/${categoryId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "user-type": `${accessToken.userType}`,
+          "store-id": `${accessToken.storeId}`,
+          "x-access-token": `${accessToken.token}`,
+        },
+        body: JSON.stringify(category),
+      }
+    );
+    if (!response.ok) {
+      console.log(`HTTP error! status: ${response.status}`);
+      throw NextResponse.json({ response: { status: response.status } });
+    }
+    const result = (await response.json()) as CategoryDTO;
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw NextResponse.json({ response: { status: 500 } });
+  }
+}
+
+export async function deleteCategory(categoryId: number) {
+  try {
+    const requestId = crypto.randomUUID();
+    const token = cookies().get("sessionToken")?.value;
+    if (!token) {
+      throw NextResponse.json({ response: { status: 401 } });
+    }
+    const accessToken = JSON.parse(token) as TokenDTO;
+    const response = await fetch(
+      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/category/${requestId}/${categoryId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "user-type": `${accessToken.userType}`,
+          "store-id": `${accessToken.storeId}`,
+          "x-access-token": `${accessToken.token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      console.log(`HTTP error! status: ${response.status}`);
+      throw NextResponse.json({ response: { status: response.status } });
+    }
+    const result = (await response.json()) as CategoryDTO;
+    return result;
   } catch (err) {
     console.log(err);
     throw NextResponse.json({ response: { status: 500 } });

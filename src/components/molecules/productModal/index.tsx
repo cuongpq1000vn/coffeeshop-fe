@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import style from "../style/product-modal.module.css";
 import { MdAdd } from "react-icons/md";
 import BasicInformation from "./basic-form";
@@ -20,31 +20,18 @@ type CreateProductModalProps = {
   open: boolean;
   onClose: () => void;
   onSubmit: (product: ProductRequest) => void;
+  initialProduct: ProductRequest;
+  isEditMode?: boolean;
 };
 
 export default function ProductModal({
   open,
   onClose,
   onSubmit,
+  initialProduct,
+  isEditMode = false,
 }: Readonly<CreateProductModalProps>) {
-  const [product, setProduct] = useState<ProductRequest>({
-    name: "",
-    price: 0,
-    live: false,
-    countSale: 0,
-    finalPrice: 0,
-    longDescription: "",
-    shortDescription: "",
-    images: [],
-    storeId: "",
-    category: 0,
-    note: "",
-    recommended: false,
-    discountFrom: new Date(),
-    discountTo: new Date(),
-    discountAmount: 0,
-    discountPercent: 0,
-  });
+  const [product, setProduct] = useState<ProductRequest>(initialProduct);
 
   const handleInputChange = (
     event: React.ChangeEvent<
@@ -101,16 +88,22 @@ export default function ProductModal({
     onClose();
   };
 
+  useEffect(() => {
+    setProduct(initialProduct);
+  }, [initialProduct]);
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle className={style.title}>
-        Create New Product <hr className="mt-4" />
+        {isEditMode ? "Edit Product" : "Create New Product"}{" "}
+        <hr className="mt-4" />
       </DialogTitle>
       <DialogContent>
         <h1 className={style.contentHeader}>Basic Information</h1>
         <BasicInformation
           product={product}
           handleInputChange={handleInputChange}
+          isEditMode={isEditMode}
         />
         <hr className="mt-4 mb-4" />
         <div>
@@ -119,7 +112,7 @@ export default function ProductModal({
           </label>
           <div className="flex gap-6 mt-5">
             <div className="w-32 h-32 border-2 border-dashed border-gray-300 flex items-center justify-center">
-              {product.images ? (
+              {product.images[0] === "" ? (
                 <Image
                   src={product.images[0]}
                   alt="Product"
@@ -210,7 +203,7 @@ export default function ProductModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleSubmit} className={style.saveButton}>
-          Save
+          {isEditMode ? "Save Changes" : "Create"}
         </Button>
       </DialogActions>
     </Dialog>
