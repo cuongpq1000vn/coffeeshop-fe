@@ -14,11 +14,13 @@ type BasicInformationProps = {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => void;
+  isEditMode: boolean;
 };
 
 export default function BasicInformation({
   product,
   handleInputChange,
+  isEditMode,
 }: Readonly<BasicInformationProps>) {
   const [categoryOption, setCategoryOption] = useState<CategoryLabel[]>([]);
 
@@ -101,14 +103,18 @@ export default function BasicInformation({
           onChange={handleInputChange}
           required
         >
-          <option value="" disabled>
-            Select Category
-          </option>
-          {categoryOption.map((category) => (
-            <option key={category.value} value={category.value}>
-              {category.label}
+          <option value="">Select Categories</option>
+          {categoryOption.length > 0 ? (
+            categoryOption.map((category) => (
+              <option key={category.value} value={category.value}>
+                {category.label}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled>
+              No categories available
             </option>
-          ))}
+          )}
         </select>
 
         <label htmlFor="note" className={style.label}>

@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CategoryForm from "./basic-form";
 import { MdAdd } from "react-icons/md";
 import { uploadImage } from "@/services/ImageService";
@@ -19,19 +19,17 @@ type CreateCategoryModalProps = {
   open: boolean;
   onClose: () => void;
   onSubmit: (category: CategoryRequest) => void;
+  initialCategory: CategoryRequest;
+  isEditMode?: boolean;
 };
 export default function CategoryModal({
   open,
   onClose,
   onSubmit,
+  initialCategory,
+  isEditMode = false,
 }: Readonly<CreateCategoryModalProps>) {
-  const [category, setCategory] = useState<CategoryRequest>({
-    name: "",
-    parent: 0,
-    storeId: "",
-    images: [],
-  });
-
+  const [category, setCategory] = useState<CategoryRequest>(initialCategory);
   const handleInputChange = (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -45,6 +43,7 @@ export default function CategoryModal({
         [name]: target.checked,
       }));
     } else if (type === "number" || type === "select-one") {
+      console.log(value);
       setCategory((prevProduct) => ({
         ...prevProduct,
         [name]: Number(value),
@@ -86,13 +85,21 @@ export default function CategoryModal({
     }
   };
 
+  useEffect(() => {
+    setCategory(initialCategory);
+  }, [initialCategory]);
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Create New Category</DialogTitle>
+      <DialogTitle>
+        {isEditMode ? "Edit Category" : "Create New Category"}
+      </DialogTitle>
+
       <DialogContent>
         <CategoryForm
           category={category}
           handleInputChange={handleInputChange}
+          isEditMode={isEditMode}
         />
         <hr className="mt-4 mb-4" />
         <div>
@@ -136,7 +143,7 @@ export default function CategoryModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleSubmit} className={style.saveButton}>
-          Save
+          {isEditMode ? "Save Changes" : "Create"}
         </Button>
       </DialogActions>
     </Dialog>

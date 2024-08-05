@@ -14,7 +14,7 @@ export type ProductDTO = MetadataDTO & {
   finalPrice: number;
   discountFrom: number;
   discountTo: number;
-  category: string | null;
+  category: number | null;
   discountAmount: number;
   discountPercent: number;
   attributes: string | null;

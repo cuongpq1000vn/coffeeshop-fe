@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { CategoryRequest } from "@/types/dtos/categoryProduct/request/CategoryRequest";
 import style from "../style/category-information.module.css";
 import { SetStateAction, useEffect, useState } from "react";
@@ -13,14 +13,15 @@ type CategoryInformationProps = {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => void;
+  isEditMode: boolean;
 };
 
 export default function CategoryForm({
   category,
   handleInputChange,
+  isEditMode,
 }: Readonly<CategoryInformationProps>) {
   const [categoryOption, setCategoryOption] = useState<CategoryLabel[]>([]);
-
   useEffect(() => {
     const getAllCategories = async () => {
       try {
@@ -53,7 +54,7 @@ export default function CategoryForm({
       </label>
       <input
         className={style.inputBox}
-        placeholder="Iced Coffee"
+        placeholder="Category Name"
         type="text"
         id="name"
         name="name"
@@ -68,18 +69,22 @@ export default function CategoryForm({
         className={`${style.inputBox} mb-4`}
         id="parent"
         name="parent"
-        value={category.parent}
+        value={category.parent.toString()}
         onChange={handleInputChange}
         required
       >
-        <option value="" disabled>
-          Select Category
-        </option>
-        {categoryOption.map((category) => (
-          <option key={category.value} value={category.value}>
-            {category.label}
+        <option value="">Select Categories</option>
+        {categoryOption.length > 0 ? (
+          categoryOption.map((category) => (
+            <option key={category.value} value={category.value}>
+              {category.label}
+            </option>
+          ))
+        ) : (
+          <option value="" disabled>
+            No categories available
           </option>
-        ))}
+        )}
       </select>
     </div>
   );
