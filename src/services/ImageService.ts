@@ -15,22 +15,20 @@ export async function uploadImage(
 ) {
   const requestId = crypto.randomUUID();
   const token = cookies().get("sessionToken")?.value;
-  console.log(image);
   if (!token) {
     throw NextResponse.json({ response: { status: 401 } });
   }
   const accessToken = JSON.parse(token) as TokenDTO;
+  console.log(`${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/image/${requestId}/upload?storeId=${accessToken.storeId}&imageType=${fileType}&objectCode=${slug}`);
   try {
     const response = await fetch(
-      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/image/${requestId}/upload?storeId=${accessToken.storeId}&imageType=${fileType}&objectCode=${slug}`,
+      `http://localhost:8080/codezx-image/merchant/image/${requestId}/upload?storeId=${accessToken.storeId}&imageType=${fileType}&objectCode=cuong`,
       {
         method: "POST",
         headers: {
           "user-type": `${accessToken.userType}`,
           "store-id": `${accessToken.storeId}`,
           "x-access-token": `${accessToken.token}`,
-          "Content-Type": "multipart/form-data",
-          Accept: "application/json",
         },
         body: image,
       }

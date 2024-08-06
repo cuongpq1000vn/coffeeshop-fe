@@ -120,7 +120,7 @@ export default function DataTable() {
         renderCell: (params) => (
           <Avatar
             alt={params.row.Name}
-            src={params.value}
+            src={url + params.value}
             className={style.image}
           />
         ),
@@ -208,6 +208,7 @@ export default function DataTable() {
       },
       {
         field: "action",
+        headerName: "Actions",
         type: "actions",
         width: 80,
         getActions: (params: any) => [
@@ -289,6 +290,7 @@ export default function DataTable() {
       if (!productDTO) {
         console.error("Unexpected data format:", productDTO);
       }
+      window.location.reload();
     } catch (error) {
       console.error("Failed to create:", error);
     }
