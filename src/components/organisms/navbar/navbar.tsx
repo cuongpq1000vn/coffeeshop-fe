@@ -6,7 +6,6 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -29,7 +28,7 @@ import Link from "next/link";
 import { logout } from "@/services/AuthService";
 import { useRouter } from "next/navigation";
 import { GiShoppingCart } from "react-icons/gi";
-import { height } from "@fortawesome/free-brands-svg-icons/fa42Group";
+import SideBar from "@/components/molecules/SideBar";
 
 function ResponsiveAppBar() {
   const router = useRouter();
@@ -81,7 +80,7 @@ function ResponsiveAppBar() {
               fontFamily: "Lexend",
               fontWeight: 700,
               textDecoration: "none",
-              color: "#bcbc0e"
+              color: "#bcbc0e",
             }}
           >
             CODEZX
@@ -101,51 +100,12 @@ function ResponsiveAppBar() {
           >
             COFFEE SHOP
           </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center"> Dashboard </Typography>
-              </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center"> Menu Config </Typography>
-              </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center"> Order Manager </Typography>
-              </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center"> Sales Analytics</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-
+          <SideBar
+            handleOpenNavMenu={handleOpenNavMenu}
+            handleCloseNavMenu={handleCloseNavMenu}
+            handleClose={handleClose}
+            anchorElNav={anchorElNav}
+          />
           <Typography
             variant="h5"
             noWrap
@@ -165,6 +125,7 @@ function ResponsiveAppBar() {
           >
             CODEZX
           </Typography>
+
           <Box
             sx={{
               flexGrow: 1,
@@ -188,7 +149,7 @@ function ResponsiveAppBar() {
                 onClick={handleClick}
                 className={style.pagec}
               >
-                <LocalMallOutlinedIcon className={style.iconBar} /> Menu Config{" "}
+                <LocalMallOutlinedIcon className={style.iconBar} /> Menu Config
                 <KeyboardArrowDownIcon className={style.iconBar} />
               </Button>
               <Menu
