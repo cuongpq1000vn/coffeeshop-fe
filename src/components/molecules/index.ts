@@ -6,3 +6,4 @@ export { default as BasicInformation } from "./productModal/basic-form";
 export { default as CategoryModal } from "./categoryModal/index";
 export { default as CategoryForm } from "./categoryModal/basic-form";
 export { default as SideBard } from "./SideBar/index";
+export { default as OrderCard } from "./orderCard/index";
