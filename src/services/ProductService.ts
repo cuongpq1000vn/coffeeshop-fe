@@ -80,7 +80,6 @@ export async function updateProduct(
   productId: string,
   product: ProductRequest
 ) {
-  console.log(JSON.stringify(product));
   try {
     const requestId = crypto.randomUUID();
     const token = cookies().get("sessionToken")?.value;
@@ -89,7 +88,6 @@ export async function updateProduct(
     }
     const accessToken = JSON.parse(token) as TokenDTO;
     product.storeId = accessToken.storeId;
-    console.log(productId)
     const response = await fetch(
       `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/product/${requestId}/${productId}`,
       {
@@ -123,7 +121,6 @@ export async function deleteProduct(productId: string) {
       throw NextResponse.json({ response: { status: 401 } });
     }
     const accessToken = JSON.parse(token) as TokenDTO;
-    console.log("hit");
     const response = await fetch(
       `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/product/${requestId}/${productId}`,
       {

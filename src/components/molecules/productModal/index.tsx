@@ -23,7 +23,7 @@ type CreateProductModalProps = {
   initialProduct: ProductRequest;
   isEditMode?: boolean;
 };
-
+const url = process.env.NEXT_PUBLIC_API_URL;
 export default function ProductModal({
   open,
   onClose,
@@ -67,16 +67,17 @@ export default function ProductModal({
         formData.append("file", event.target.files[0]);
         const imageUrl: ImageProps = await uploadImage(
           formData,
-          "bao",
+          product.name,
           "product"
         );
         if (!imageUrl) {
           console.error("Unexpected data format:", imageUrl);
+        } else {
+          setProduct((prevProduct) => ({
+            ...prevProduct,
+            images: [imageUrl.links[0]],
+          }));
         }
-        setProduct((prevProduct) => ({
-          ...prevProduct,
-          images: imageUrl.links,
-        }));
       }
     } catch (error) {
       console.error("Failed to upload image:", error);
@@ -112,19 +113,16 @@ export default function ProductModal({
           </label>
           <div className="flex gap-6 mt-5">
             <div className="w-32 h-32 border-2 border-dashed border-gray-300 flex items-center justify-center">
-              {product.images[0] === "" ? (
+              {product.images[0] ? (
                 <Image
-                  src={product.images[0]}
+                  src={url + product.images[0]}
                   alt="Product"
                   className="object-cover w-32 h-32"
+                  width={500}
+                  height={500}
                 />
               ) : (
-                <input
-                  type="file"
-                  id="productImage"
-                  className="opacity-0 absolute cursor-pointer w-32 h-32"
-                  onChange={handleImageChange}
-                />
+                <div></div>
               )}
             </div>
             <div className="w-32 h-32 border-2 border-dashed border-gray-300 flex items-center justify-center">

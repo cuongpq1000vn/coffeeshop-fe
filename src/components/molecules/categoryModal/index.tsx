@@ -43,7 +43,6 @@ export default function CategoryModal({
         [name]: target.checked,
       }));
     } else if (type === "number" || type === "select-one") {
-      console.log(value);
       setCategory((prevProduct) => ({
         ...prevProduct,
         [name]: Number(value),
