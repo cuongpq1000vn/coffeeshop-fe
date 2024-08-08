@@ -147,7 +147,7 @@ export default function SideBar({
               </List>
             </Collapse>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton href="/content/order-manager">
                 <ListItemIcon>
                   <LaptopIcon className={style.iconBar} />
                 </ListItemIcon>

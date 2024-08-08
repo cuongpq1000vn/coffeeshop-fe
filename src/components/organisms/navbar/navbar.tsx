@@ -188,9 +188,9 @@ function ResponsiveAppBar() {
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
+              href="/content/order-manager"
             >
-              <LaptopIcon className={style.iconBar} /> Order Manager{" "}
-              <KeyboardArrowDownIcon className={style.iconBar} />
+              <LaptopIcon className={style.iconBar} /> Order Manager
             </Button>
             <Button
               onClick={handleCloseNavMenu}
