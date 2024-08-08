@@ -37,7 +37,6 @@ export default function Table({
         getRowHeight={({ id, densityFactor }: GridRowHeightParams) => {
           return 70 * densityFactor;
         }}
-        checkboxSelection
         autoHeight
       />
     </div>
