@@ -19,10 +19,9 @@ export async function uploadImage(
     throw NextResponse.json({ response: { status: 401 } });
   }
   const accessToken = JSON.parse(token) as TokenDTO;
-  console.log(`${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/image/${requestId}/upload?storeId=${accessToken.storeId}&imageType=${fileType}&objectCode=${slug}`);
   try {
     const response = await fetch(
-      `http://localhost:8080/codezx-image/merchant/image/${requestId}/upload?storeId=${accessToken.storeId}&imageType=${fileType}&objectCode=cuong`,
+      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/image/${requestId}/upload?storeId=${accessToken.storeId}&imageType=${fileType}&objectCode=${slug}`,
       {
         method: "POST",
         headers: {
