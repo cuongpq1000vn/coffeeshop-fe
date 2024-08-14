@@ -1,6 +1,7 @@
+import { MetadataDTO } from "@/types/MetaData";
 import { UUID } from "crypto";
 
-export type OrderDto = {
+export type OrderDto = MetadataDTO & {
   id: UUID;
   storeId: UUID;
   code: string;
@@ -19,7 +20,7 @@ export type OrderDto = {
   orderItems: OrderItemDto[];
 };
 
-export type OrderItemDto = {
+export type OrderItemDto = MetadataDTO & {
   id: UUID;
   version: number;
   productId: UUID;
@@ -37,7 +38,7 @@ export type OrderItemDto = {
   orderItemOptions: OrderItemOptionDto[];
 };
 
-export type OrderItemOptionDto = {
+export type OrderItemOptionDto = MetadataDTO & {
   id: UUID;
   version: number;
   attributeId: UUID;
