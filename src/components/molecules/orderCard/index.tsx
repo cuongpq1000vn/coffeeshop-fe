@@ -14,6 +14,8 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Image from "next/image";
 import { OrderDto, OrderItemDto } from "@/types/dtos/order/OrderDto";
+import { MdDelete } from "react-icons/md";
+import { IoSendOutline } from "react-icons/io5";
 
 type OrderProps = {
   order: OrderDto;
@@ -118,11 +120,20 @@ export default function OrderDetailCard({
         </Collapse>
 
         <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
-          <Button variant="contained" color="success">
-            Accept
-          </Button>
-          <Button variant="outlined" color="error" onClick={handleCancelClick}>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleCancelClick}
+            startIcon={<MdDelete />}
+          >
             Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="success"
+            endIcon={<IoSendOutline />}
+          >
+            Accept
           </Button>
         </Box>
       </CardContent>
