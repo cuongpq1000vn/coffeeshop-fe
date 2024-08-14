@@ -42,7 +42,7 @@ export async function getOrderByStatus(
   }
 }
 
-export async function processOrder(orderId: string) {
+export async function handleProcessOrder(orderId: string) {
   const requestId = crypto.randomUUID();
   const token = cookies().get("sessionToken")?.value;
   if (!token) {
@@ -74,7 +74,7 @@ export async function processOrder(orderId: string) {
   }
 }
 
-export async function cancelOrder(orderId: string) {
+export async function handleCancelOrder(orderId: string) {
   const requestId = crypto.randomUUID();
   const token = cookies().get("sessionToken")?.value;
   if (!token) {
@@ -106,7 +106,7 @@ export async function cancelOrder(orderId: string) {
   }
 }
 
-export async function completeOrder(orderId: string) {
+export async function handleCompleteOrder(orderId: string) {
   const requestId = crypto.randomUUID();
   const token = cookies().get("sessionToken")?.value;
   if (!token) {

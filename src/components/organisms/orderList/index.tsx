@@ -1,11 +1,91 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../style/order.module.css";
 import { IoSearch } from "react-icons/io5";
 import { OrderCard } from "@/components/molecules";
+import { OrderDto } from "@/types/dtos/order/OrderDto";
+import { PageDTO } from "@/types/Page";
+import { getOrderByStatus, handleCancelOrder } from "@/services/OrderService";
+import Toast from "@/util/notification";
 
 export default function OrderList() {
+  const [newOrder, setNewOrder] = useState<PageDTO<OrderDto> | null>(null);
+  const [processOrder, setProcessOrder] = useState<PageDTO<OrderDto> | null>(
+    null
+  );
+  const [cancelOrder, setCancelOrder] = useState<PageDTO<OrderDto> | null>(
+    null
+  );
+  const [doneOrder, setDoneOrder] = useState<PageDTO<OrderDto> | null>(null);
+
+  const updateCancelOrder = async (orderId: string) => {
+    try {
+      const result: OrderDto = await handleCancelOrder(orderId);
+      if (result) {
+        Toast.notifySuccess("Cancel order #" + result.code + "successfully");
+      }
+    } catch (error) {
+      console.error("Cannot cancel this order", error);
+    }
+  };
+
+  const renderNewOrder = async () => {
+    try {
+      const result: PageDTO<OrderDto> = await getOrderByStatus(
+        OrderStatus.PENDING,
+        0,
+        100
+      );
+      setNewOrder(result);
+    } catch (error) {
+      console.error("Failed to load new order", error);
+    }
+  };
+  const renderProcessOrder = async () => {
+    try {
+      const result: PageDTO<OrderDto> = await getOrderByStatus(
+        OrderStatus.PROCESSING,
+        0,
+        100
+      );
+      setProcessOrder(result);
+    } catch (error) {
+      console.error("Failed to load process order", error);
+    }
+  };
+  const renderCancelOrder = async () => {
+    try {
+      const result: PageDTO<OrderDto> = await getOrderByStatus(
+        OrderStatus.CANCELLED,
+        0,
+        100
+      );
+      setCancelOrder(result);
+    } catch (error) {
+      console.error("Failed to load cancel order", error);
+    }
+  };
+  const renderDoneOrder = async () => {
+    try {
+      const result: PageDTO<OrderDto> = await getOrderByStatus(
+        OrderStatus.COMPLETED,
+        0,
+        100
+      );
+      setDoneOrder(result);
+    } catch (error) {
+      console.error("Failed to load done order", error);
+    }
+  };
+
+  useEffect(() => {
+    renderNewOrder();
+    renderDoneOrder();
+    renderCancelOrder();
+    renderProcessOrder();
+  }, [newOrder, processOrder, doneOrder, cancelOrder]);
+
   return (
     <div>
       <div className="relative mb-5">
@@ -28,6 +108,14 @@ export default function OrderList() {
             >
               <span className={styles.title}>Cancel</span>
             </div>
+            {cancelOrder?.content.map((order: OrderDto) => (
+              <OrderCard
+                key={order.code}
+                order={order}
+                cancelOrder={updateCancelOrder}
+                colorName={"bg-red-600"}
+              />
+            ))}
           </div>
 
           <div>
@@ -36,7 +124,15 @@ export default function OrderList() {
             >
               <span className={styles.title}>New Orders</span>
             </div>
-            <OrderCard />
+
+            {newOrder?.content.map((order: OrderDto) => (
+              <OrderCard
+                key={order.code}
+                order={order}
+                cancelOrder={updateCancelOrder}
+                colorName={"bg-yellow-500"}
+              />
+            ))}
           </div>
           <div>
             <div
@@ -44,6 +140,14 @@ export default function OrderList() {
             >
               <span className={styles.title}>In Progress</span>
             </div>
+            {processOrder?.content.map((order: OrderDto) => (
+              <OrderCard
+                key={order.code}
+                order={order}
+                cancelOrder={updateCancelOrder}
+                colorName={"bg-neutral-800"}
+              />
+            ))}
           </div>
           <div>
             <div
@@ -51,6 +155,14 @@ export default function OrderList() {
             >
               <span className={styles.title}>Done</span>
             </div>
+            {doneOrder?.content.map((order: OrderDto) => (
+              <OrderCard
+                key={order.code}
+                order={order}
+                cancelOrder={updateCancelOrder}
+                colorName={"bg-blue-500"}
+              />
+            ))}
           </div>
         </div>
       </div>
