@@ -35,7 +35,9 @@ export default function OrderList() {
       const result: PageDTO<OrderDto> = await getOrderByStatus(
         OrderStatus.PENDING,
         0,
-        100
+        100,
+        new Date(2024, 7, 28),
+        new Date(2024, 7, 30)
       );
       setNewOrder(result);
     } catch (error) {
@@ -47,7 +49,9 @@ export default function OrderList() {
       const result: PageDTO<OrderDto> = await getOrderByStatus(
         OrderStatus.PROCESSING,
         0,
-        100
+        100,
+        new Date(2024, 7, 28),
+        new Date(2024, 7, 30)
       );
       setProcessOrder(result);
     } catch (error) {
@@ -59,7 +63,9 @@ export default function OrderList() {
       const result: PageDTO<OrderDto> = await getOrderByStatus(
         OrderStatus.CANCELLED,
         0,
-        100
+        100,
+        new Date(2024, 7, 28),
+        new Date(2024, 7, 30)
       );
       setCancelOrder(result);
     } catch (error) {
@@ -71,7 +77,9 @@ export default function OrderList() {
       const result: PageDTO<OrderDto> = await getOrderByStatus(
         OrderStatus.COMPLETED,
         0,
-        100
+        100,
+        new Date(2024, 7, 28),
+        new Date(2024, 7, 30)
       );
       setDoneOrder(result);
     } catch (error) {

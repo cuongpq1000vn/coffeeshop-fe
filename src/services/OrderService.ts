@@ -9,7 +9,9 @@ const CONTEXT_PATH = process.env.CONTEXT_PATH_COFFEE_SHOP_ORDER_API;
 export async function getOrderByStatus(
   status: string,
   page: number,
-  size: number
+  size: number,
+  startDate: Date,
+  endDate: Date
 ) {
   const requestId = crypto.randomUUID();
   const token = cookies().get("sessionToken")?.value;
@@ -19,7 +21,7 @@ export async function getOrderByStatus(
   const accessToken = JSON.parse(token) as TokenDTO;
   try {
     const response = await fetch(
-      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/orders/${requestId}/${accessToken.storeId}/get-all?account=1r2&status=${status}&page=${page}&size=${size}&sort=code%2CDESC`,
+      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/merchant/orders/${requestId}/${accessToken.storeId}/get-all?account=1r2&status=${status}&page=${page}&size=${size}&sort=code%2CDESC&startDate=${startDate}&endDate=${endDate}`,
       {
         method: "GET",
         headers: {
