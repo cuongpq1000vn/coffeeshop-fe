@@ -18,7 +18,7 @@ export async function getAllCategory(page: number, size: number) {
   const accessToken = JSON.parse(token) as TokenDTO;
   try {
     const response = await fetch(
-      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/api/category/${requestId}/${accessToken.storeId}/getAll?page=${page}&size=${size}`,
+      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/api/category/${requestId}/1cce71fd-35d3-40e0-a9de-85040c9d995f/getAll?page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {

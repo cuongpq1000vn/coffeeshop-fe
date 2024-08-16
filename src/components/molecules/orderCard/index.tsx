@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -16,15 +16,22 @@ import Image from "next/image";
 import { OrderDto, OrderItemDto } from "@/types/dtos/order/OrderDto";
 import { MdDelete } from "react-icons/md";
 import { IoSendOutline } from "react-icons/io5";
+import { OrderStatus } from "@/types/OrderStatus";
+import { MdOutlineDone } from "react-icons/md";
 
+const url = process.env.NEXT_PUBLIC_API_URL;
 type OrderProps = {
   order: OrderDto;
   cancelOrder: (orderId: string) => Promise<void>;
+  completeOrder: (orderId: string) => Promise<void>;
+  processOrder: (orderId: string) => Promise<void>;
   colorName: string;
 };
-export default function OrderDetailCard({
+export default memo(function OrderDetailCard({
   order,
   cancelOrder,
+  completeOrder,
+  processOrder,
   colorName,
 }: OrderProps) {
   const [expanded, setExpanded] = useState(false);
@@ -42,32 +49,62 @@ export default function OrderDetailCard({
     }
   };
 
+  const handleCompleteClick = async () => {
+    try {
+      await completeOrder(order.id);
+      console.log("Order completed successfully");
+    } catch (error) {
+      console.error("Failed to complete order", error);
+    }
+  };
+
+  const handleProcessClick = async () => {
+    try {
+      await processOrder(order.id);
+      console.log("Order processed successfully");
+    } catch (error) {
+      console.error("Failed to process order", error);
+    }
+  };
+
+  const formatDate = (dateString: number) => {
+    const date = new Date(dateString);
+    return date.toISOString().slice(0, 19).replace("T", " ");
+  };
+
   return (
     <Card className="mt-5 shadow-lg rounded-lg">
       <CardContent>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6" component="div" fontWeight="bold">
+          <Typography variant="subtitle1" component="div" fontWeight="bold">
             Order #{order.code}
           </Typography>
-          <Chip label={order.status} className={`${colorName} text-white`} />
-          <IconButton
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-            sx={{
-              transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-              transition: "transform 0.3s",
-            }}
-          >
-            <ExpandMoreIcon />
-          </IconButton>
+          <div>
+            <IconButton
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+              sx={{
+                transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.3s",
+              }}
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </div>
         </Box>
         <Typography variant="body2" color="text.secondary" mt={1}>
-          Placed on: {order.createdAt}
+          Placed on: {formatDate(order.createdAt)}
         </Typography>
-        <Typography variant="body2" color="text.secondary" mt={1}>
-          Table Name: {order.tableName}
-        </Typography>
+        <div className="flex items-center space-x-2">
+          <Typography variant="body2" color="text.secondary">
+            Table Name: {order.tableName}
+          </Typography>
+          <Chip
+            label={order.status}
+            className={`${colorName} text-white font-bold`}
+          />
+        </div>
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           {order.orderItems.map((orderItems: OrderItemDto) => (
@@ -75,11 +112,12 @@ export default function OrderDetailCard({
               <Divider sx={{ my: 2 }} />
               <Box display="flex" alignItems="center">
                 <Image
-                  src={orderItems.img[0]}
+                  src={url + orderItems.img[0]}
                   width={200}
                   height={200}
                   className="rounded-md"
                   alt="Product"
+                  loading="lazy"
                 />
                 <Box ml={2}>
                   <Typography variant="subtitle1" fontWeight="bold">
@@ -100,7 +138,7 @@ export default function OrderDetailCard({
               <Typography variant="subtitle2" color="text.secondary">
                 Price:
               </Typography>
-              <Typography variant="h6" fontWeight="bold">
+              <Typography variant="body2">
                 {orderItems.price} {orderItems.currency}
               </Typography>
             </Box>
@@ -119,24 +157,37 @@ export default function OrderDetailCard({
           </Typography>
         </Collapse>
 
-        <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={handleCancelClick}
-            startIcon={<MdDelete />}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="success"
-            endIcon={<IoSendOutline />}
-          >
-            Accept
-          </Button>
-        </Box>
+        {order.status === OrderStatus.COMPLETED ||
+          (order.status === OrderStatus.CANCELLED && <></>)}
+
+        {order.status === OrderStatus.PROCESSING && (
+          <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
+            <button
+              className="py-1.5 px-5 me-2 text-sm font-medium bg-white border border-black text-gray-900 hover:bg-gray-100 rounded-lg text-center flex items-center"
+              onClick={handleCompleteClick}
+            >
+              Completed <MdOutlineDone className="ml-1" />
+            </button>
+          </Box>
+        )}
+
+        {order.status === OrderStatus.PENDING && (
+          <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
+            <button
+              className="py-1.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-black hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100"
+              onClick={handleCancelClick}
+            >
+              Cancel
+            </button>
+            <button
+              className="py-1.5 px-5 me-2 text-sm font-medium text-white bg-black rounded-lg border border-black hover:bg-gray-800"
+              onClick={handleProcessClick}
+            >
+              Accept
+            </button>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );
-}
+});

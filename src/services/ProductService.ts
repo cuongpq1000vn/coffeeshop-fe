@@ -19,7 +19,7 @@ export async function getAllProduct(page: number, size: number) {
   const accessToken = JSON.parse(token) as TokenDTO;
   try {
     const response = await fetch(
-      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/api/product/${requestId}/${accessToken.storeId}/all-products?page=${page}&size=${size}`,
+      `${COFFEE_SHOP_URL}/${CONTEXT_PATH}/api/product/${requestId}/1cce71fd-35d3-40e0-a9de-85040c9d995f/all-products?page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {

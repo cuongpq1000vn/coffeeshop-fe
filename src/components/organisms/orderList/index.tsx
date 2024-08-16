@@ -5,94 +5,164 @@ import styles from "../style/order.module.css";
 import { IoSearch } from "react-icons/io5";
 import { OrderCard } from "@/components/molecules";
 import { OrderDto } from "@/types/dtos/order/OrderDto";
-import { PageDTO } from "@/types/Page";
-import { getOrderByStatus, handleCancelOrder } from "@/services/OrderService";
+import {
+  getOrderByStatus,
+  handleCancelOrder,
+  handleCompleteOrder,
+  handleProcessOrder,
+} from "@/services/OrderService";
 import Toast from "@/util/notification";
+import { OrderStatus } from "@/types/OrderStatus";
+import { CircularProgress, Paper } from "@mui/material";
 
 export default function OrderList() {
-  const [newOrder, setNewOrder] = useState<PageDTO<OrderDto> | null>(null);
-  const [processOrder, setProcessOrder] = useState<PageDTO<OrderDto> | null>(
-    null
-  );
-  const [cancelOrder, setCancelOrder] = useState<PageDTO<OrderDto> | null>(
-    null
-  );
-  const [doneOrder, setDoneOrder] = useState<PageDTO<OrderDto> | null>(null);
+  const [orders, setOrders] = useState<OrderDto[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const updateCancelOrder = async (orderId: string) => {
     try {
       const result: OrderDto = await handleCancelOrder(orderId);
       if (result) {
         Toast.notifySuccess("Cancel order #" + result.code + "successfully");
+        setOrders((prevOrders) => {
+          return prevOrders.map((order) =>
+            order.id === result.id
+              ? { ...order, status: OrderStatus.CANCELLED }
+              : order
+          );
+        });
       }
     } catch (error) {
       console.error("Cannot cancel this order", error);
     }
   };
 
-  const renderNewOrder = async () => {
+  const updateProcessOrder = async (orderId: string) => {
     try {
-      const result: PageDTO<OrderDto> = await getOrderByStatus(
-        OrderStatus.PENDING,
-        0,
-        100,
-        new Date(2024, 7, 28),
-        new Date(2024, 7, 30)
-      );
-      setNewOrder(result);
+      const result: OrderDto = await handleProcessOrder(orderId);
+      if (result) {
+        Toast.notifySuccess("Process order #" + result.code + "successfully");
+        setOrders((prevOrders) => {
+          return prevOrders.map((order) =>
+            order.id === result.id
+              ? { ...order, status: OrderStatus.PROCESSING }
+              : order
+          );
+        });
+      }
     } catch (error) {
-      console.error("Failed to load new order", error);
+      console.error("Cannot process this order", error);
     }
   };
-  const renderProcessOrder = async () => {
+
+  const updateCompleteOrder = async (orderId: string) => {
     try {
-      const result: PageDTO<OrderDto> = await getOrderByStatus(
-        OrderStatus.PROCESSING,
-        0,
-        100,
-        new Date(2024, 7, 28),
-        new Date(2024, 7, 30)
-      );
-      setProcessOrder(result);
+      const result: OrderDto = await handleCompleteOrder(orderId);
+      if (result) {
+        Toast.notifySuccess("Complete order #" + result.code + "successfully");
+        setOrders((prevOrders) => {
+          return prevOrders.map((order) =>
+            order.id === result.id
+              ? { ...order, status: OrderStatus.COMPLETED }
+              : order
+          );
+        });
+      }
     } catch (error) {
-      console.error("Failed to load process order", error);
-    }
-  };
-  const renderCancelOrder = async () => {
-    try {
-      const result: PageDTO<OrderDto> = await getOrderByStatus(
-        OrderStatus.CANCELLED,
-        0,
-        100,
-        new Date(2024, 7, 28),
-        new Date(2024, 7, 30)
-      );
-      setCancelOrder(result);
-    } catch (error) {
-      console.error("Failed to load cancel order", error);
-    }
-  };
-  const renderDoneOrder = async () => {
-    try {
-      const result: PageDTO<OrderDto> = await getOrderByStatus(
-        OrderStatus.COMPLETED,
-        0,
-        100,
-        new Date(2024, 7, 28),
-        new Date(2024, 7, 30)
-      );
-      setDoneOrder(result);
-    } catch (error) {
-      console.error("Failed to load done order", error);
+      console.error("Cannot complete this order", error);
     }
   };
 
   useEffect(() => {
-    renderNewOrder();
-    renderDoneOrder();
-    renderCancelOrder();
-    renderProcessOrder();
-  }, [newOrder, processOrder, doneOrder, cancelOrder]);
+    setLoading(true);
+    const fetchOrders = async () => {
+      try {
+        const [newOrders, processOrders, cancelOrders, doneOrders] =
+          await Promise.all([
+            getOrderByStatus(
+              OrderStatus.PENDING,
+              0,
+              100,
+              new Date(2024, 7, 28),
+              new Date(2024, 7, 30)
+            ),
+            getOrderByStatus(
+              OrderStatus.PROCESSING,
+              0,
+              100,
+              new Date(2024, 7, 28),
+              new Date(2024, 7, 30)
+            ),
+            getOrderByStatus(
+              OrderStatus.CANCELLED,
+              0,
+              100,
+              new Date(2024, 7, 28),
+              new Date(2024, 7, 30)
+            ),
+            getOrderByStatus(
+              OrderStatus.COMPLETED,
+              0,
+              100,
+              new Date(2024, 7, 28),
+              new Date(2024, 7, 30)
+            ),
+          ]);
+        setOrders([
+          ...newOrders.content,
+          ...processOrders.content,
+          ...cancelOrders.content,
+          ...doneOrders.content,
+        ]);
+      } catch (error) {
+        console.error("Failed to load orders", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  const renderOrders = (status: OrderStatus, colorName: string) => (
+    <Paper
+      elevation={2}
+      className="bg-gray-100 p-4 mb-4 flex flex-col min-h-[650px]"
+    >
+      <div>
+        <div className="flex items-center">
+          <span className={`w-4 h-4 rounded-full ${colorName}`}></span>
+          <span className={styles.title}>
+            {status.toLowerCase().replace(/^./, status[0].toUpperCase())}
+          </span>
+          <span className="ml-2 inline-flex items-center justify-center w-6 h-6 text-sm font-semibold text-gray-900 bg-gray-300 rounded-full">
+            {orders.filter((order) => order.status === status).length}
+          </span>
+        </div>
+        <p className="text-sm text-gray-500 mt-1">
+          {status === OrderStatus.CANCELLED && "This item has been canceled"}
+          {status === OrderStatus.PENDING && "This item hasn't been started"}
+          {status === OrderStatus.PROCESSING &&
+            "This is actively being worked on"}
+          {status === OrderStatus.COMPLETED && "This has been completed"}
+        </p>
+
+        <div className="flex-grow">
+          {orders
+            .filter((order) => order.status === status)
+            .map((order: OrderDto) => (
+              <OrderCard
+                key={order.code}
+                order={order}
+                cancelOrder={updateCancelOrder}
+                colorName={colorName}
+                completeOrder={updateCompleteOrder}
+                processOrder={updateProcessOrder}
+              />
+            ))}
+        </div>
+      </div>
+    </Paper>
+  );
 
   return (
     <div>
@@ -108,72 +178,20 @@ export default function OrderList() {
           required
         />
       </div>
-      <div>
-        <div className="mx-auto grid gap-6 xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-2">
-          <div>
-            <div
-              className={`${styles.headerContainer} flex items-center bg-red-600`}
-            >
-              <span className={styles.title}>Cancel</span>
-            </div>
-            {cancelOrder?.content.map((order: OrderDto) => (
-              <OrderCard
-                key={order.code}
-                order={order}
-                cancelOrder={updateCancelOrder}
-                colorName={"bg-red-600"}
-              />
-            ))}
-          </div>
-
-          <div>
-            <div
-              className={`${styles.headerContainer} flex items-center bg-yellow-500`}
-            >
-              <span className={styles.title}>New Orders</span>
-            </div>
-
-            {newOrder?.content.map((order: OrderDto) => (
-              <OrderCard
-                key={order.code}
-                order={order}
-                cancelOrder={updateCancelOrder}
-                colorName={"bg-yellow-500"}
-              />
-            ))}
-          </div>
-          <div>
-            <div
-              className={`${styles.headerContainer} flex items-center bg-neutral-800`}
-            >
-              <span className={styles.title}>In Progress</span>
-            </div>
-            {processOrder?.content.map((order: OrderDto) => (
-              <OrderCard
-                key={order.code}
-                order={order}
-                cancelOrder={updateCancelOrder}
-                colorName={"bg-neutral-800"}
-              />
-            ))}
-          </div>
-          <div>
-            <div
-              className={`${styles.headerContainer} flex items-center bg-blue-500`}
-            >
-              <span className={styles.title}>Done</span>
-            </div>
-            {doneOrder?.content.map((order: OrderDto) => (
-              <OrderCard
-                key={order.code}
-                order={order}
-                cancelOrder={updateCancelOrder}
-                colorName={"bg-blue-500"}
-              />
-            ))}
+      {loading ? (
+        <div className="flex justify-center items-center mt-16">
+          <CircularProgress />
+        </div>
+      ) : (
+        <div>
+          <div className="mx-auto grid gap-3 xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-2">
+            {renderOrders(OrderStatus.CANCELLED, "bg-red-400")}
+            {renderOrders(OrderStatus.PENDING, "bg-yellow-400")}
+            {renderOrders(OrderStatus.PROCESSING, "bg-green-400")}
+            {renderOrders(OrderStatus.COMPLETED, "bg-blue-400")}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

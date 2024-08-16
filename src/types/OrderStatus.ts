@@ -1,4 +1,4 @@
-enum OrderStatus {
+export enum OrderStatus {
   PENDING = "PENDING",
   PROCESSING = "PROCESSING",
   COMPLETED = "COMPLETED",
