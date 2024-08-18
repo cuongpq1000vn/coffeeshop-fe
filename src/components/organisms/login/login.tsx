@@ -8,7 +8,7 @@ export default function Login() {
       <div className={style.row}>
         <div className={style.column}>
           <div className={style.block}>
-            <h1>Sign in</h1>
+            <h1 className={style.title}>Sign in</h1>
             <LoginForm />
           </div>
         </div>
@@ -19,7 +19,7 @@ export default function Login() {
             width={0}
             height={0}
             sizes="100vw"
-            style={{ width: "100%", height: "auto", overflow: "hidden" }}
+            style={{ width: "100%", height: "auto" }}
             alt=""
           />
         </div>

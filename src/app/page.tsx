@@ -1,7 +1,10 @@
-export default function Page() {
-  return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
-  );
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Trang chủ',
+  description: 'Trang chủ của Productic, được tạo bởi Được dev'
+}
+
+export default function Home() {
+  return <main>Xin chào</main>
 }

@@ -6,7 +6,6 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -27,8 +26,10 @@ import Fade from "@mui/material/Fade";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import Link from "next/link";
 import { logout } from "@/services/AuthService";
-import router from "next/router";
 import { useRouter } from "next/navigation";
+import { GiShoppingCart } from "react-icons/gi";
+import SideBar from "@/components/molecules/SideBar";
+
 function ResponsiveAppBar() {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -62,15 +63,13 @@ function ResponsiveAppBar() {
   };
   const logoutSubmit = async () => {
     const result = await logout();
-    console.log(result);
     router.refresh();
-  }
+  };
   return (
     <AppBar position="fixed" color="primary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            className={style.codezx}
             variant="h6"
             noWrap
             component="a"
@@ -78,15 +77,15 @@ function ResponsiveAppBar() {
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
+              fontFamily: "Lexend",
               fontWeight: 700,
               textDecoration: "none",
+              color: "#bcbc0e",
             }}
           >
             CODEZX
           </Typography>
           <Typography
-            className={style.coffeeshop}
             variant="h6"
             noWrap
             component="a"
@@ -94,59 +93,19 @@ function ResponsiveAppBar() {
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
+              fontFamily: "Lexend Exa",
               fontWeight: 700,
-              color: "white",
               textDecoration: "none",
             }}
           >
             COFFEE SHOP
           </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center"> Dashboard </Typography>
-              </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center"> Menu Config </Typography>
-              </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center"> Order Manager </Typography>
-              </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center"> Sales Analytics</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-
+          <SideBar
+            handleOpenNavMenu={handleOpenNavMenu}
+            handleCloseNavMenu={handleCloseNavMenu}
+            handleClose={handleClose}
+            anchorElNav={anchorElNav}
+          />
           <Typography
             variant="h5"
             noWrap
@@ -166,6 +125,7 @@ function ResponsiveAppBar() {
           >
             CODEZX
           </Typography>
+
           <Box
             sx={{
               flexGrow: 1,
@@ -189,7 +149,7 @@ function ResponsiveAppBar() {
                 onClick={handleClick}
                 className={style.pagec}
               >
-                <LocalMallOutlinedIcon className={style.iconBar} /> Menu Config{" "}
+                <LocalMallOutlinedIcon className={style.iconBar} /> Menu Config
                 <KeyboardArrowDownIcon className={style.iconBar} />
               </Button>
               <Menu
@@ -212,10 +172,12 @@ function ResponsiveAppBar() {
                     <LocalMallOutlinedIcon /> Product
                   </MenuItem>
                 </Link>
-                <Link
-                  href="/content/product-addon"
-                  className={style.iconNavBar}
-                >
+                <Link href="/content/table" className={style.iconNavBar}>
+                  <MenuItem onClick={handleClose}>
+                    <GiShoppingCart /> Table
+                  </MenuItem>
+                </Link>
+                <Link href="/content/add-on" className={style.iconNavBar}>
                   <MenuItem onClick={handleClose}>
                     <TuneOutlinedIcon /> Product Add-Ons
                   </MenuItem>
@@ -226,9 +188,9 @@ function ResponsiveAppBar() {
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
+              href="/content/order-manager"
             >
-              <LaptopIcon className={style.iconBar} /> Order Manager{" "}
-              <KeyboardArrowDownIcon className={style.iconBar} />
+              <LaptopIcon className={style.iconBar} /> Order Manager
             </Button>
             <Button
               onClick={handleCloseNavMenu}

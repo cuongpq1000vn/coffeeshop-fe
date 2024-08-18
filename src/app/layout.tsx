@@ -2,6 +2,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppProvider from "@/context/AppProvider";
 import { cookies } from "next/headers";
+import "./globals.css";
+import { TokenDTO } from "@/types/dtos/auth/Token";
 export default function RootLayout({
   children,
 }: {
@@ -12,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AppProvider initialSessionToken={sessionToken?.value}>
+        <AppProvider initialSessionToken={JSON.parse(sessionToken?.value || '{}') as TokenDTO}>
           {children} <ToastContainer />
         </AppProvider>
       </body>

@@ -6,7 +6,7 @@ import style from "../style/tableTab.module.css";
 import Tab from "@mui/material/Tab";
 import { TableTabProps } from "@/types/TableTab";
 
-export default function TableTab(tableTabProps: TableTabProps) {
+export default function TableTab(tableTabProps: Readonly<TableTabProps>) {
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -19,7 +19,7 @@ export default function TableTab(tableTabProps: TableTabProps) {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label={`All Categories (${tableTabProps.total})`} />
+          <Tab label={`All ${tableTabProps.type} (${tableTabProps.total})`} />
           <Tab label={`Active (${tableTabProps.active})`} />
           <Tab label={`Inactive (${tableTabProps.inActive})`} />
         </Tabs>

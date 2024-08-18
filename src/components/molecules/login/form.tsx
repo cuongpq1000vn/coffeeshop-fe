@@ -35,7 +35,7 @@ export default function LoginForm() {
         console.log(`HTTP error! status: ${getCookie.status}`);
       }
       const payload = (await getCookie.json()) as TokenDTO;
-      setSessionToken(payload.token);
+      setSessionToken(payload);
       router.push("/content/category");
       router.refresh();
     } catch (error: any) {
@@ -81,7 +81,7 @@ export default function LoginForm() {
         />
         <div className={style.align}>
           <div className={style.remember}>
-            <input type="checkbox" /> Remember me
+            <input type="checkbox"/> Remember me
           </div>
           <div className={style.forgot}>
             <button>Forgot password?</button>
