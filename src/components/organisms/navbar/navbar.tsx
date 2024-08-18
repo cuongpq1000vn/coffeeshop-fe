@@ -62,11 +62,16 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
   const logoutSubmit = async () => {
-    const result = await logout();
+    await logout();
     router.refresh();
   };
   return (
-    <AppBar position="fixed" color="primary">
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: "#222936",
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -89,7 +94,6 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href=""
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -136,6 +140,7 @@ function ResponsiveAppBar() {
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
               className={style.pagec}
+              href="/content/dashboard"
             >
               <WidgetsIcon className={style.iconBar} /> Dashboard
             </Button>
