@@ -110,6 +110,7 @@ export default function DataTable() {
       },
       {
         field: "action",
+        headerName: "Actions",
         type: "actions",
         getActions: (params: any) => [
           <GridActionsCellItem
